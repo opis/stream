@@ -33,7 +33,7 @@ class CallbackStreamWrapper extends AbstractContentStreamWrapper
             return null;
         }
 
-        $path = substr($path, strlen($prefix));
+        $path = static::formatPath(substr($path, strlen($prefix)));
         unset($prefix);
 
         if (!is_callable($path)) {
@@ -63,18 +63,27 @@ class CallbackStreamWrapper extends AbstractContentStreamWrapper
     /**
      * @inheritDoc
      */
+    protected function cacheKey(string $path): string
+    {
+        return md5(static::formatPath($path));
+    }
+
+    /**
+     * @inheritDoc
+     */
     public static function protocol(): string
     {
         return static::PROTOCOL;
     }
-
+    /** @noinspection PhpDocMissingThrowsInspection */
     /**
      * @param string $callback
      * @return string
      */
     public static function url(string $callback): string
     {
-        return static::PROTOCOL . '://' . $callback;
+        /** @noinspection PhpUnhandledExceptionInspection */
+        return static::PROTOCOL . '://' . $callback . '?' . bin2hex(random_bytes(16));
     }
 
     /**
@@ -104,5 +113,14 @@ class CallbackStreamWrapper extends AbstractContentStreamWrapper
         }
 
         return is_string($data) ? $data : null;
+    }
+
+    /**
+     * @param string $path
+     * @return string
+     */
+    protected static function formatPath(string $path): string
+    {
+        return strpos($path, '?') === false ? $path : strstr($path, '?', true);
     }
 }

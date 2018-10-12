@@ -155,7 +155,7 @@ abstract class AbstractContentStreamWrapper implements IStreamWrapper
      */
     protected function stream(string $path, string $mode): ?IStream
     {
-        $key = md5($path);
+        $key = $this->cacheKey($path);
         if (!array_key_exists($key, static::$cached)) {
             static::$cached[$key] = $this->content($path);
         }
@@ -166,6 +166,15 @@ abstract class AbstractContentStreamWrapper implements IStreamWrapper
         }
 
         return $this->contentToStream($content, $path, $mode, $this->contextOptions($this->context));
+    }
+
+    /**
+     * @param string $path
+     * @return string
+     */
+    protected function cacheKey(string $path): string
+    {
+        return md5($path);
     }
 
     /**

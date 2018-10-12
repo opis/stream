@@ -101,8 +101,18 @@ class CallbackWrapperTest extends TestCase
         $this->assertEquals('test altered', $this->getData('funcSubCallback', [
             'func' => static::class . '::funcObjReturn',
             'params' => [
-                'data' => 'test'
-            ]
+                'data' => 'test',
+            ],
+        ]));
+
+        $this->assertEquals('sub test altered', $this->getData('funcSubCallback', [
+            'func' => static::class . '::funcSubCallback',
+            'params' => [
+                'func' => static::class . '::funcObjReturn',
+                'params' => [
+                    'data' => 'sub test',
+                ],
+            ],
         ]));
     }
 
