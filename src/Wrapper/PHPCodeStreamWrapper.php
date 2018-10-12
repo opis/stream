@@ -49,7 +49,7 @@ class PHPCodeStreamWrapper extends AbstractContentStreamWrapper
     /**
      * @inheritDoc
      */
-    protected function streamMeta(IContent $content, string $path, string $mode): array
+    protected function streamMeta(IContent $content, string $path, string $mode, ?array $options = null): array
     {
         return [
             'wrapper_type' => static::PROTOCOL,

@@ -165,29 +165,55 @@ abstract class AbstractContentStreamWrapper implements IStreamWrapper
             return null;
         }
 
-        return $this->contentToStream($content, $path, $mode);
+        return $this->contentToStream($content, $path, $mode, $this->contextOptions($this->context));
     }
 
     /**
      * @param IContent $content
      * @param string $path
      * @param string $mode
+     * @param array|null $options
      * @return IStream
      */
-    protected function contentToStream(IContent $content, string $path, string $mode): IStream
+    protected function contentToStream(IContent $content, string $path, string $mode, ?array $options = null): ?IStream
     {
-        $meta = $this->streamMeta($content, $path, $mode);
-        return new DataStream($content->data(), $mode, $content->created(), $content->updated(), $meta);
+        $data = $content->data($options);
+        if ($data === null) {
+            return null;
+        }
+
+        $meta = $this->streamMeta($content, $path, $mode, $options);
+
+        return new DataStream($data, $mode, $content->created(), $content->updated(), $meta);
+    }
+
+    /**
+     * @param resource|null $context
+     * @return array|null
+     */
+    protected function contextOptions($context): ?array
+    {
+        if (!$context || !($context = stream_context_get_options($context))) {
+            return null;
+        }
+
+        return $context[static::protocol()] ?? null;
     }
 
     /**
      * @param IContent $content
      * @param string $path
      * @param string $mode
+     * @param array|null $options
      * @return array
      */
-    protected function streamMeta(IContent $content, string $path, string $mode): array
-    {
+    protected function streamMeta(
+        IContent $content,
+        string $path,
+        string $mode,
+        /** @noinspection PhpUnusedParameterInspection */
+        ?array $options = null
+    ): array {
         return [
             'wrapper_type' => static::protocol(),
             'mediatype' => $content->type(),
@@ -239,6 +265,18 @@ abstract class AbstractContentStreamWrapper implements IStreamWrapper
     final public static function isRegistered(): bool
     {
         return static::$registered;
+    }
+
+    /**
+     * @param array $options
+     * @param array|null $params
+     * @return resource
+     */
+    public static function createContext(array $options, ?array $params = null)
+    {
+        return stream_context_create([
+            static::protocol() => $options,
+        ], $params);
     }
 
     /**

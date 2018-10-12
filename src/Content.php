@@ -28,7 +28,7 @@ class Content implements IContent
     /** @var string */
     protected $type;
     /** @var string|null */
-    protected $string = null;
+    protected $string = false;
 
     /**
      * Content constructor.
@@ -48,12 +48,13 @@ class Content implements IContent
     /**
      * @inheritDoc
      */
-    public function data(): string
+    public function data(?array $options = null): ?string
     {
-        if ($this->string === null) {
+        if ($this->string === false) {
             $data = $this->data;
             $this->data = null;
-            $this->string = (string)(is_callable($data) ? $data() : $data);
+            $data = is_callable($data) ? $data($options) : $data;
+            $this->string = is_string($data) ? $data : null;
         }
         return $this->string;
     }
@@ -80,13 +81,5 @@ class Content implements IContent
     public function type(): ?string
     {
         return $this->type;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function __toString()
-    {
-        return $this->data();
     }
 }

@@ -20,10 +20,10 @@ namespace Opis\Stream;
 interface IContent
 {
     /**
-     * Content
-     * @return string
+     * @param array|null $options
+     * @return string|null
      */
-    public function data(): string;
+    public function data(?array $options = null): ?string;
 
     /**
      * Created
