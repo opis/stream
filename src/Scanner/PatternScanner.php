@@ -15,9 +15,10 @@
  * limitations under the License.
  * ============================================================================ */
 
-namespace Opis\Stream;
+namespace Opis\Stream\Scanner;
 
 use InvalidArgumentException;
+use Opis\Stream\IStream;
 
 class PatternScanner
 {

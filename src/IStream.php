@@ -24,10 +24,68 @@ interface IStream
     const SEEK_END = SEEK_END;
 
     /**
-     * Checks if the stream is closed
+     * Consumes data from stream
+     * @param int $length
+     * @return string|null
+     */
+    public function read(int $length = 8192): ?string;
+
+    /**
+     * Consumes the current line
+     * Line delimiters \r & \n are trimmed
+     * @param int|null $maxLength
+     * @return null|string
+     */
+    public function readLine(?int $maxLength = null): ?string;
+
+    /**
+     * Consumes all the remaining data from stream
+     * @return string|null
+     */
+    public function readToEnd(): ?string;
+
+    /**
+     * Appends data to stream
+     * @param string $string
+     * @return int|null
+     */
+    public function write(string $string): ?int;
+
+    /**
+     * @param int $size
      * @return bool
      */
-    public function isClosed(): bool;
+    public function truncate(int $size): bool;
+
+    /**
+     * @return bool
+     */
+    public function flush(): bool;
+
+    /**
+     * Current position of the pointer
+     * @return int|null
+     */
+    public function tell(): ?int;
+
+    /**
+     * Sets the pointer position
+     * @param int $offset
+     * @param int $whence
+     * @return bool
+     */
+    public function seek(int $offset, int $whence = SEEK_SET): bool;
+
+    /**
+     * Performs seek(0)
+     * @return bool
+     */
+    public function rewind(): bool;
+
+    /**
+     * Closes the stream
+     */
+    public function close(): void;
 
     /**
      * Checks if the stream is writable
@@ -54,10 +112,10 @@ interface IStream
     public function isEOF(): bool;
 
     /**
-     * Current position of the pointer
-     * @return int|null
+     * Checks if the stream was closed
+     * @return bool
      */
-    public function tell(): ?int;
+    public function isClosed(): bool;
 
     /**
      * Gets stream size
@@ -66,44 +124,15 @@ interface IStream
     public function size(): ?int;
 
     /**
-     * Sets the pointer position
-     * @param int $offset
-     * @param int $whence
+     * @return array|null
+     */
+    public function stat(): ?array;
+
+    /**
+     * @param int $operation
      * @return bool
      */
-    public function seek(int $offset, int $whence = SEEK_SET): bool;
-
-    /**
-     * Performs seek(0)
-     * @return bool
-     */
-    public function rewind(): bool;
-
-    /**
-     * Appends data to stream
-     * @param string $string
-     * @return int|null
-     */
-    public function write(string $string): ?int;
-
-    /**
-     * Consumes data from stream
-     * @param int $length
-     * @return string|null
-     */
-    public function read(int $length = 8192): ?string;
-
-    /**
-     * @param int|null $maxLength
-     * @return null|string
-     */
-    public function readLine(?int $maxLength = null): ?string;
-
-    /**
-     * Consumes all the remaining data from stream
-     * @return string|null
-     */
-    public function readToEnd(): ?string;
+    public function lock(int $operation): bool;
 
     /**
      * Get stream meta information
@@ -114,18 +143,13 @@ interface IStream
     public function metadata(string $key = null);
 
     /**
-     * Closes the stream
-     */
-    public function close(): void;
-
-    /**
      * Gets the associated resource, if any
      * @return resource|null
      */
     public function resource();
 
     /**
-     * Gets all stream data
+     * Gets all stream data and restores pointer position if possible
      * @return string
      */
     public function __toString();

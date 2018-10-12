@@ -15,11 +15,12 @@
  * limitations under the License.
  * ============================================================================ */
 
-namespace Opis\Stream;
+namespace Opis\Stream\Printer;
 
 use InvalidArgumentException;
+use Opis\Stream\IStream;
 
-class Printer
+class StandardPrinter
 {
     /** @var IStream */
     protected $stream;
@@ -46,66 +47,22 @@ class Printer
     }
 
     /**
-     * Writes the formatted string to stream
      * @param string $format
      * @param mixed ...$args
-     * @return bool
-     * @see sprintf()
-     */
-    public function print(string $format, ...$args): bool
-    {
-        return $this->doWrite(sprintf($format, ...$args)) !== null;
-    }
-
-    /**
-     * Writes the formatted string to stream and restores previous pointer position
-     * @param string $format
-     * @param mixed ...$args
-     * @return bool
-     * @see sprintf()
-     */
-    public function printRestore(string $format, ...$args): bool
-    {
-        return $this->doWrite(sprintf($format, ...$args), true) !== null;
-    }
-
-    /**
-     * Writes data to stream
-     * @param string $data
-     * @param bool $restore True to restore previous pointer position
      * @return int|null
+     * @see sprintf()
      */
-    public function write(string $data, bool $restore = false): ?int
+    public function print(string $format, ...$args): ?int
     {
-        return $this->doWrite($data, $restore);
+        return $this->stream->write(sprintf($format, ...$args));
     }
 
     /**
      * @param string $data
-     * @param bool $restore
      * @return int|null
      */
-    protected function doWrite(string $data, bool $restore = false): ?int
+    public function write(string $data): ?int
     {
-        $stream = $this->stream;
-        if (!$restore) {
-            return $stream->write($data);
-        }
-
-        if (!$stream->isSeekable()) {
-            return null;
-        }
-
-        if (($pos = $stream->tell()) === null) {
-            return null;
-        }
-
-        if (($len = $stream->write($data)) === null) {
-            return null;
-        }
-
-        $stream->seek($pos);
-
-        return $len;
+        return $this->stream->write($data);
     }
 }

@@ -31,7 +31,7 @@ class Stream implements IStream
      * @param resource|string $stream
      * @param string $mode
      */
-    public function __construct($stream, string $mode = 'r')
+    public function __construct($stream, string $mode = 'rb')
     {
         if (is_string($stream)) {
             $resource = @fopen($stream, $mode);
@@ -106,7 +106,7 @@ class Stream implements IStream
      */
     public function isSeekable(): bool
     {
-        return $this->resource ? stream_get_meta_data($this->resource)['seekable'] : false;
+        return $this->resource ? (bool)$this->metadata('seekable') : false;
     }
 
     /**
@@ -181,6 +181,30 @@ class Stream implements IStream
     /**
      * @inheritDoc
      */
+    public function truncate(int $size): bool
+    {
+        if (!$this->resource) {
+            return false;
+        }
+
+        return ftruncate($this->resource, $size);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function flush(): bool
+    {
+        if (!$this->resource) {
+            return false;
+        }
+
+        return fflush($this->resource);
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function isReadable(): bool
     {
         $mode = $this->metadata('mode');
@@ -205,7 +229,7 @@ class Stream implements IStream
      */
     public function read(int $length = 8192): ?string
     {
-        if (!$this->resource) {
+        if (!$this->resource || feof($this->resource)) {
             return null;
         }
 
@@ -233,7 +257,7 @@ class Stream implements IStream
             return null;
         }
 
-        return $result;
+        return rtrim($result, "\r\n");
     }
 
     /**
@@ -291,6 +315,31 @@ class Stream implements IStream
         }
         $this->to_string = '';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function stat(): ?array
+    {
+        if (!$this->resource) {
+            return null;
+        }
+
+        return @fstat($this->resource) ?: null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function lock(int $operation): bool
+    {
+        if (!$this->resource) {
+            return false;
+        }
+
+        return flock($this->resource, $operation);
+    }
+
 
     /**
      * @inheritDoc
