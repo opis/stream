@@ -17,7 +17,7 @@
 
 namespace Opis\Stream\Test\Scanner;
 
-use Opis\Stream\PHPDataStream;
+use Opis\Stream\DataStream;
 use Opis\Stream\Scanner\PatternScanner;
 use PHPUnit\Framework\TestCase;
 
@@ -156,6 +156,6 @@ class PatternScannerTest extends TestCase
      */
     protected function scanner(string $data, ?array $tokens = null): PatternScanner
     {
-        return new PatternScanner(new PHPDataStream($data), $tokens);
+        return new PatternScanner(new DataStream($data), $tokens);
     }
 }
