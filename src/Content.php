@@ -19,16 +19,14 @@ namespace Opis\Stream;
 
 class Content implements IContent
 {
-    /** @var mixed */
+    /** @var string|callable */
     protected $data;
-    /** @var int */
+    /** @var int|null */
     protected $created;
-    /** @var int */
+    /** @var int|null */
     protected $updated;
-    /** @var string */
-    protected $type;
     /** @var string|null */
-    protected $string = false;
+    protected $type;
 
     /**
      * Content constructor.
