@@ -28,14 +28,14 @@ class CallbackWrapperTest extends TestCase
         return strtoupper(__FUNCTION__);
     }
 
-    public static function funcGetSum(...$args)
+    public static function funcGetSum($args = null)
     {
-        return array_sum($args);
+        return $args ? array_sum($args) : 0;
     }
 
-    public static function funcObjReturn($data)
+    public static function funcObjReturn($args = null)
     {
-        return new class($data)
+        return new class($args['data'] ?? null)
         {
             private $data;
 
