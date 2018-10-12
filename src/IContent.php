@@ -20,28 +20,26 @@ namespace Opis\Stream;
 interface IContent
 {
     /**
+     * Content
      * @return string
      */
     public function data(): string;
 
     /**
-     * @return int
+     * Created
+     * @return int|null
      */
-    public function created(): int;
+    public function created(): ?int;
 
     /**
-     * @return int
+     * Last modified
+     * @return int|null
      */
-    public function updated(): int;
+    public function updated(): ?int;
 
     /**
      * Content type
-     * @return string
+     * @return string|null
      */
-    public function type(): string;
-
-    /**
-     * @return string
-     */
-    public function mode(): string;
+    public function type(): ?string;
 }

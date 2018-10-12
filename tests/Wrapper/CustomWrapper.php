@@ -25,9 +25,9 @@ class CustomWrapper extends AbstractContentStreamWrapper
     /**
      * @inheritDoc
      */
-    protected function content(string $path, string $mode): ?IContent
+    protected function content(string $path): ?IContent
     {
-        return new Content(explode('://', $path, 2)[1] ?? null, $mode);
+        return new Content(explode('://', $path, 2)[1] ?? null);
     }
 
     /**

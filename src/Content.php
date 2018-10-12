@@ -26,8 +26,6 @@ class Content implements IContent
     /** @var int */
     protected $updated;
     /** @var string */
-    protected $mode;
-    /** @var string */
     protected $type;
     /** @var string|null */
     protected $string = null;
@@ -35,18 +33,16 @@ class Content implements IContent
     /**
      * Content constructor.
      * @param string|callable $data
-     * @param null|string $mode
      * @param int|null $created
      * @param int|null $updated
      * @param null|string $type
      */
-    public function __construct($data, ?string $mode = null, ?int $created = null, ?int $updated = null, ?string $type = null)
+    public function __construct($data, ?int $created = null, ?int $updated = null, ?string $type = null)
     {
         $this->data = $data;
-        $this->mode = $mode ?? 'rb';
-        $this->created = $created ?? time();
-        $this->updated = $updated ?? $this->created;
-        $this->type = $type ?? 'text/plain';
+        $this->created = $created;
+        $this->updated = $updated;
+        $this->type = $type;
     }
 
     /**
@@ -65,7 +61,7 @@ class Content implements IContent
     /**
      * @inheritDoc
      */
-    public function created(): int
+    public function created(): ?int
     {
         return $this->created;
     }
@@ -73,7 +69,7 @@ class Content implements IContent
     /**
      * @inheritDoc
      */
-    public function updated(): int
+    public function updated(): ?int
     {
         return $this->updated;
     }
@@ -81,17 +77,9 @@ class Content implements IContent
     /**
      * @inheritDoc
      */
-    public function type(): string
+    public function type(): ?string
     {
         return $this->type;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function mode(): string
-    {
-        return $this->mode;
     }
 
     /**

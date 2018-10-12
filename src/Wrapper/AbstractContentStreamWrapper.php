@@ -154,7 +154,7 @@ abstract class AbstractContentStreamWrapper implements IStreamWrapper
     {
         $key = md5($path);
         if (!array_key_exists($key, static::$cached)) {
-            static::$cached[$key] = $this->content($path, $mode);
+            static::$cached[$key] = $this->content($path);
         }
 
         $content = static::$cached[$key];
@@ -162,24 +162,42 @@ abstract class AbstractContentStreamWrapper implements IStreamWrapper
             return null;
         }
 
-        return $this->contentToStream($content);
+        return $this->contentToStream($content, $path, $mode);
     }
 
     /**
      * @param IContent $content
+     * @param string $path
+     * @param string $mode
      * @return IStream
      */
-    protected function contentToStream(IContent $content): IStream
+    protected function contentToStream(IContent $content, string $path, string $mode): IStream
     {
-        return new DataStream($content->data(), $content->mode(), $content->created(), $content->updated());
+        $meta = $this->streamMeta($content, $path, $mode);
+        return new DataStream($content->data(), $mode, $content->created(), $content->updated(), $meta);
+    }
+
+    /**
+     * @param IContent $content
+     * @param string $path
+     * @param string $mode
+     * @return array
+     */
+    protected function streamMeta(IContent $content, string $path, string $mode): array
+    {
+        return [
+            'wrapper_type' => static::protocol(),
+            'mediatype' => $content->type(),
+            'mode' => $mode,
+            'uri' => $path,
+        ];
     }
 
     /**
      * @param string $path
-     * @param string $mode
      * @return null|IContent
      */
-    abstract protected function content(string $path, string $mode): ?IContent;
+    abstract protected function content(string $path): ?IContent;
 
     /**
      * @return bool

@@ -40,22 +40,38 @@ class DataStream implements IStream
     /** @var bool */
     protected $seekable = true;
 
+    /** @var array */
+    protected $meta;
+
     /**
      * DataStream constructor.
      * @param string $data
      * @param string $mode
      * @param int|null $created
      * @param int|null $updated
+     * @param array $meta
      */
-    public function __construct(string $data, string $mode = 'rb', ?int $created = null, ?int $updated = null)
+    public function __construct(string $data, string $mode = 'rb', ?int $created = null, ?int $updated = null, array $meta = [])
     {
         $this->content = $data;
         $this->length = strlen($data);
+
+        $this->meta = $meta + [
+                'timed_out' => false,
+                'blocked' => false,
+                'unread_bytes' => 0,
+                'stream_type' => 'opis/stream',
+                'wrapper_type' => 'content',
+            ];
+
+        $this->meta['mode'] = $mode;
 
         $list = str_split($mode);
         $this->readable = (bool)array_intersect($list, ['r', '+']);
         $this->writable = (bool)array_intersect($list, ['w', 'a', 'x', 'c', '+']);
         $this->seekable = !in_array('a', $list);
+
+        unset($list, $mode, $meta);
 
         if (!$this->seekable) {
             $this->pointer = $this->length;
@@ -350,7 +366,17 @@ class DataStream implements IStream
      */
     public function metadata(string $key = null)
     {
-        return null;
+        if ($this->content === null) {
+            return null;
+        }
+
+        $meta = ['seekable' => $this->isSeekable(), 'eof' => $this->isEOF()] + $this->meta;
+
+        if ($key === null) {
+            return $meta;
+        }
+
+        return $meta[$key] ?? null;
     }
 
     /**

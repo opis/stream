@@ -20,23 +20,43 @@ namespace Opis\Stream\Wrapper;
 use Throwable;
 use Opis\Stream\{Content, IContent, IStream};
 
-final class PHPCodeStreamWrapper extends AbstractContentStreamWrapper
+class PHPCodeStreamWrapper extends AbstractContentStreamWrapper
 {
     const PROTOCOL = 'php-code';
 
     /**
      * @inheritDoc
      */
-    protected function content(string $path, string $mode): ?IContent
+    final protected function content(string $path): ?IContent
     {
         $prefix = static::PROTOCOL . '://';
         if (strpos($path, $prefix) !== 0) {
             return null;
         }
 
-        $code = substr($path, strlen($prefix));
+        return $this->phpCodeContent(substr($path, strlen($prefix)));
+    }
 
-        return new Content($code, $mode,null, null, 'text/html');
+    /**
+     * @param string $code
+     * @return IContent
+     */
+    protected function phpCodeContent(string $code): IContent
+    {
+        return new Content($code,null, null, 'text/html');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function streamMeta(IContent $content, string $path, string $mode): array
+    {
+       return [
+           'wrapper_type' => static::PROTOCOL,
+           'mediatype' => $content->type(),
+           'mode' => $mode,
+           // no point to put uri here
+       ];
     }
 
     /**
