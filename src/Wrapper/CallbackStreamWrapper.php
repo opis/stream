@@ -67,4 +67,42 @@ class CallbackStreamWrapper extends AbstractContentStreamWrapper
     {
         return static::PROTOCOL;
     }
+
+    /**
+     * @param string $callback
+     * @return string
+     */
+    public static function url(string $callback): string
+    {
+        return static::PROTOCOL . '://' . $callback;
+    }
+
+    /**
+     * @param string $callback
+     * @param array|null $params
+     * @return null|string
+     */
+    public static function execute(string $callback, ?array $params = null): ?string
+    {
+        $alreadyRegistered = static::isRegistered();
+        if (!$alreadyRegistered) {
+            if (!static::register()) {
+                return null;
+            }
+        }
+
+        $url = static::url($callback);
+        $ctx = null;
+        if ($params) {
+            $ctx = static::createContext($params);
+        }
+
+        $data = file_get_contents($url, false, $ctx);
+
+        if (!$alreadyRegistered) {
+            static::unregister();
+        }
+
+        return is_string($data) ? $data : null;
+    }
 }

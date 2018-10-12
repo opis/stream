@@ -28,14 +28,15 @@ class CallbackWrapperTest extends TestCase
         return strtoupper(__FUNCTION__);
     }
 
-    public static function funcGetSum($args = null)
+    public static function funcGetSum(array $args = null)
     {
         return $args ? array_sum($args) : 0;
     }
 
-    public static function funcObjReturn($args = null)
+    public static function funcObjReturn(array $args = null)
     {
-        return new class($args['data'] ?? null)
+        $args = $args['data'] ?? null;
+        return new class($args)
         {
             private $data;
 
@@ -52,6 +53,25 @@ class CallbackWrapperTest extends TestCase
                 return $this->data . ' altered';
             }
         };
+    }
+
+    public static function funcSubCallback(array $args = null)
+    {
+        if (!isset($args['func']) || !is_string($args['func'])) {
+            return null;
+        }
+
+        $data = CallbackStreamWrapper::execute($args['func'], $args['params'] ?? null);
+
+        if ($data === null) {
+            return null;
+        }
+
+        if (isset($args['label'])) {
+            return $args['label'] . ' ' . $data;
+        }
+
+        return $data;
     }
 
     public function testSimple()
@@ -72,6 +92,20 @@ class CallbackWrapperTest extends TestCase
         ]));
     }
 
+    public function testSub()
+    {
+        $this->assertEquals(strtoupper('funcWithoutParams'), $this->getData('funcSubCallback', [
+            'func' => static::class . '::funcWithoutParams',
+        ]));
+
+        $this->assertEquals('test altered', $this->getData('funcSubCallback', [
+            'func' => static::class . '::funcObjReturn',
+            'params' => [
+                'data' => 'test'
+            ]
+        ]));
+    }
+
     /**
      * @param string $method
      * @param array|null $params
@@ -79,24 +113,6 @@ class CallbackWrapperTest extends TestCase
      */
     protected function getData(string $method, ?array $params = null)
     {
-        $ctx = $params ? CallbackStreamWrapper::createContext($params) : null;
-
-        return file_get_contents('callback://' . static::class . '::' . $method, false, $ctx);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function setUp()
-    {
-        CallbackStreamWrapper::register();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function tearDown()
-    {
-        CallbackStreamWrapper::unregister();
+        return CallbackStreamWrapper::execute(static::class . '::' . $method, $params);
     }
 }

@@ -50,13 +50,8 @@ class Content implements IContent
      */
     public function data(?array $options = null): ?string
     {
-        if ($this->string === false) {
-            $data = $this->data;
-            $this->data = null;
-            $data = is_callable($data) ? $data($options) : $data;
-            $this->string = is_string($data) ? $data : null;
-        }
-        return $this->string;
+        $data = is_callable($this->data) ? ($this->data)($options) : $this->data;
+        return is_string($data) ? $data : null;
     }
 
     /**
