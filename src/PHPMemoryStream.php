@@ -17,16 +17,22 @@
 
 namespace Opis\Stream;
 
-final class PHPDataStream extends Stream
+final class PHPMemoryStream extends Stream
 {
     /**
-     * DataStream constructor.
-     * @param string $data
-     * @param string $mode
-     * @param string $content_type
+     * PHPMemoryStream constructor.
+     * @param string|null $data
+     * @param int|null $max Maximum amount of bytes to store in memory before using a temporary file
+     * @param string|null $mode
      */
-    public function __construct(string $data, string $mode = 'rb', string $content_type = 'text/plain')
+    public function __construct(?string $data = null, ?int $max = null, ?string $mode = null)
     {
-        parent::__construct('data://' . $content_type . ';base64,' . base64_encode($data), $mode);
+        parent::__construct($max > 0 ? ('php://temp/maxmemory:' . $max) : 'php://memory', $mode ?? 'rb+');
+
+        if ($data !== null && $data !== '') {
+            if ($this->write($data) > 0) {
+                $this->rewind();
+            }
+        }
     }
 }
