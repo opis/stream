@@ -17,8 +17,8 @@
 
 namespace Opis\Stream\Test\Printer;
 
+use Opis\Stream\PHPDataStream;
 use Opis\Stream\Printer\CopyPrinter;
-use Opis\Stream\Stream;
 use PHPUnit\Framework\TestCase;
 
 class CopyPrinterTest extends TestCase
@@ -27,14 +27,18 @@ class CopyPrinterTest extends TestCase
     {
         $printer = $this->printer();
 
-        $this->assertEquals(1000, $printer->copy(new Stream('data://text/plain,' . str_repeat('x', 1000))));
+        $this->assertEquals(1000, $printer->copy(new PHPDataStream(str_repeat('x', 1000))));
         $this->assertEquals(3, $printer->append("\nok"));
 
         $this->assertEquals(str_repeat('x', 1000) . "\nok", $printer->stream());
     }
 
+    /**
+     * @param string $data
+     * @return CopyPrinter
+     */
     protected function printer(string $data = ''): CopyPrinter
     {
-        return new CopyPrinter(new Stream('data:text/plain,' . $data, 'w+'));
+        return new CopyPrinter(new PHPDataStream($data, 'w+'));
     }
 }

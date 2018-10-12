@@ -31,6 +31,8 @@ class PatternScanner
     /** @var string|null */
     protected $buffer = '';
 
+    protected $skipped = null;
+
     /**
      * PatternScanner constructor.
      * @param IStream $stream
@@ -51,6 +53,14 @@ class PatternScanner
     public function stream(): IStream
     {
         return $this->stream;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function skipped(): ?string
+    {
+        return $this->skipped;
     }
 
     /**
@@ -107,6 +117,7 @@ class PatternScanner
      */
     public function read(int $length = 8192): ?string
     {
+        $this->skipped = null;
         if ($this->buffer === '') {
             if ($this->stream->isEOF()) {
                 return null;
@@ -145,6 +156,7 @@ class PatternScanner
      */
     protected function doNext(string $pattern, bool $match, int $chunk)
     {
+        $this->skipped = null;
         while (!$this->stream->isEOF()) {
             $data = $this->checkBuffer($pattern);
             if ($data !== null) {
@@ -158,6 +170,7 @@ class PatternScanner
             return $match ? $data : $data[0][0];
         }
 
+        $this->skipped = null;
         $this->buffer = '';
 
         return null;
@@ -170,6 +183,7 @@ class PatternScanner
     protected function checkBuffer(string $pattern): ?array
     {
         if ($this->buffer !== '' && preg_match($pattern, $this->buffer, $m, PREG_OFFSET_CAPTURE)) {
+            $this->skipped = $m[0][1] > 0 ? substr($this->buffer, 0, $m[0][1]) : null;
             $this->buffer = substr($this->buffer, strlen($m[0][0]) + $m[0][1]);
             return $m;
         }

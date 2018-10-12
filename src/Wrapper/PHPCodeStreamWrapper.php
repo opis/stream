@@ -43,7 +43,7 @@ class PHPCodeStreamWrapper extends AbstractContentStreamWrapper
      */
     protected function phpCodeContent(string $code): IContent
     {
-        return new Content($code,null, null, 'text/html');
+        return new Content($code, null, null, 'text/html');
     }
 
     /**
@@ -51,12 +51,12 @@ class PHPCodeStreamWrapper extends AbstractContentStreamWrapper
      */
     protected function streamMeta(IContent $content, string $path, string $mode): array
     {
-       return [
-           'wrapper_type' => static::PROTOCOL,
-           'mediatype' => $content->type(),
-           'mode' => $mode,
-           // no point to put uri here
-       ];
+        return [
+            'wrapper_type' => static::PROTOCOL,
+            'mediatype' => $content->type(),
+            'mode' => $mode,
+            // no point to put uri here
+        ];
     }
 
     /**

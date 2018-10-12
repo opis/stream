@@ -63,7 +63,9 @@ class StreamTest extends TestCase
     public function testReadLine(callable $factory)
     {
         $lines = [
-            'a', 'b', 'c'
+            'a',
+            'b',
+            'c',
         ];
 
         /** @var IStream $stream */
@@ -83,7 +85,7 @@ class StreamTest extends TestCase
     public function testWritable(callable $factory)
     {
         /** @var IStream $stream */
-        $stream  = $factory('', 'w');
+        $stream = $factory('', 'w');
 
         $this->assertFalse($stream->isReadable());
         $this->assertTrue($stream->isSeekable());
@@ -135,17 +137,23 @@ class StreamTest extends TestCase
 
     public function streamProvider(): array
     {
-        $list[] = [function ($data, $mode = 'r') {
-            return new Stream('data://text/plain,' . $data, $mode);
-        }];
+        $list[] = [
+            function ($data, $mode = 'r') {
+                return new Stream('data://text/plain,' . $data, $mode);
+            },
+        ];
 
-        $list[] = [function ($data, $mode = 'r') {
-            return new PHPDataStream($data, $mode);
-        }];
+        $list[] = [
+            function ($data, $mode = 'r') {
+                return new PHPDataStream($data, $mode);
+            },
+        ];
 
-        $list[] = [function ($data, $mode = 'r') {
-            return new DataStream($data, $mode);
-        }];
+        $list[] = [
+            function ($data, $mode = 'r') {
+                return new DataStream($data, $mode);
+            },
+        ];
 
         return $list;
     }

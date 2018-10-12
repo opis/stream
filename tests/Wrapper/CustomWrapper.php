@@ -27,7 +27,13 @@ class CustomWrapper extends AbstractContentStreamWrapper
      */
     protected function content(string $path): ?IContent
     {
-        return new Content(explode('://', $path, 2)[1] ?? null);
+        $path = explode('://', $path, 2);
+
+        if (count($path) !== 2 || $path[0] !== static::protocol()) {
+            return null;
+        }
+
+        return new Content($path[1]);
     }
 
     /**

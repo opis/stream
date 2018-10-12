@@ -15,11 +15,10 @@
  * limitations under the License.
  * ============================================================================ */
 
-
 namespace Opis\Stream\Test\Printer;
 
+use Opis\Stream\PHPDataStream;
 use Opis\Stream\Printer\StandardPrinter;
-use Opis\Stream\Stream;
 use PHPUnit\Framework\TestCase;
 
 class StandardPrinterTest extends TestCase
@@ -43,8 +42,12 @@ class StandardPrinterTest extends TestCase
         $this->assertEquals("a=1\nbcd=22\nsome string\nother string on same line", $stream);
     }
 
+    /**
+     * @param string $data
+     * @return StandardPrinter
+     */
     protected function printer(string $data = ''): StandardPrinter
     {
-        return new StandardPrinter(new Stream('data:text/plain,' . $data, 'w+'));
+        return new StandardPrinter(new PHPDataStream($data, 'w+'));
     }
 }

@@ -15,10 +15,9 @@
  * limitations under the License.
  * ============================================================================ */
 
-
 namespace Opis\Stream\Test\Scanner;
 
-use Opis\Stream\Stream;
+use Opis\Stream\PHPDataStream;
 use Opis\Stream\Scanner\PatternScanner;
 use PHPUnit\Framework\TestCase;
 
@@ -31,14 +30,23 @@ class PatternScannerTest extends TestCase
         $pattern = '/\w{2,5}/';
 
         $this->assertEquals('this', $scanner->next($pattern));
+        $this->assertNull($scanner->skipped());
         $this->assertFalse($scanner->isEOF());
+
         $this->assertEquals('is', $scanner->next($pattern));
+        $this->assertEquals(' ', $scanner->skipped());
         $this->assertFalse($scanner->isEOF());
+
         $this->assertEquals('short', $scanner->next($pattern));
+        $this->assertEquals(' a ', $scanner->skipped());
         $this->assertFalse($scanner->isEOF());
+
         $this->assertEquals('sente', $scanner->next($pattern));
+        $this->assertEquals(' ', $scanner->skipped());
         $this->assertFalse($scanner->isEOF());
+
         $this->assertEquals('nce', $scanner->next($pattern));
+        $this->assertNull($scanner->skipped());
         $this->assertTrue($scanner->isEOF());
     }
 
@@ -75,16 +83,18 @@ class PatternScannerTest extends TestCase
 
     public function testTokens()
     {
-        $scanner = $this->scanner("red: #ff0000, green: #00FF00, BLUE:#0000Ff", [
+        $scanner = $this->scanner("red: #ff0000, green:=#00FF00; BLUE=#0000Ff", [
             'name' => '/\w+/',
             'hex' => '/#[a-f0-9]{6}/i',
         ]);
 
         $list = [];
-
+        $skipped = [];
         while (!$scanner->isEOF()) {
             $name = $scanner->token('name');
+            $skipped[] = $scanner->skipped();
             $hex = $scanner->token('hex');
+            $skipped[] = $scanner->skipped();
             $list[$name] = $hex;
         }
 
@@ -93,6 +103,15 @@ class PatternScannerTest extends TestCase
             'green' => '#00FF00',
             'BLUE' => '#0000Ff',
         ], $list);
+
+        $this->assertEquals([
+            null,
+            ': ',
+            ', ',
+            ':=',
+            '; ',
+            '=',
+        ], $skipped);
     }
 
     public function testMatch()
@@ -104,8 +123,10 @@ class PatternScannerTest extends TestCase
         ]);
 
         $list = [];
+        $skipped = [];
         while (!$scanner->isEOF()) {
             $m = $scanner->tokenMatch('item');
+            $skipped[] = $scanner->skipped();
 
             $key = $m['name'][0];
             $value = $m['value'][0] ?? null;
@@ -117,13 +138,24 @@ class PatternScannerTest extends TestCase
             'no-value' => null,
             'abc' => '23',
             'def' => 'this is matched',
-            'lines' => "a\nb"
+            'lines' => "a\nb",
         ], $list);
+
+        $this->assertEquals([
+            'junk ',
+            ' [not+matched] [invalid=] junk2 ',
+            ' ',
+            ' junk ',
+        ], $skipped);
     }
 
-
+    /**
+     * @param string $data
+     * @param array|null $tokens
+     * @return PatternScanner
+     */
     protected function scanner(string $data, ?array $tokens = null): PatternScanner
     {
-        return new PatternScanner(new Stream('data://text/plain,' . $data), $tokens);
+        return new PatternScanner(new PHPDataStream($data), $tokens);
     }
 }

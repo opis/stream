@@ -17,8 +17,8 @@
 
 namespace Opis\Stream\Test\Scanner;
 
+use Opis\Stream\PHPDataStream;
 use Opis\Stream\Scanner\CSVScanner;
-use Opis\Stream\Stream;
 use PHPUnit\Framework\TestCase;
 
 class CSVScannerTest extends TestCase
@@ -58,6 +58,10 @@ class CSVScannerTest extends TestCase
         $this->assertEquals($data, $list);
     }
 
+    /**
+     * @param array $data
+     * @return CSVScanner
+     */
     protected function scanner(array $data): CSVScanner
     {
         $data = array_map(function (array $columns): string {
@@ -75,6 +79,6 @@ class CSVScannerTest extends TestCase
 
         $data = implode("\n", $data);
 
-        return new CSVScanner(new Stream('data://text/csv,' . $data));
+        return new CSVScanner(new PHPDataStream($data, 'rb', 'text/csv'));
     }
 }

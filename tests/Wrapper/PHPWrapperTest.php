@@ -28,7 +28,7 @@ class PHPWrapperTest extends TestCase
         $this->assertEquals([1, 2, 3], PHPCodeStreamWrapper::include('<?php return [1, 2, 3];'));
 
         $this->assertEquals([1, 2, 'ok'], PHPCodeStreamWrapper::include('<?php return [1, 2, $var];', [
-            'var' => 'ok'
+            'var' => 'ok',
         ]));
     }
 
@@ -51,7 +51,7 @@ class PHPWrapperTest extends TestCase
     {
         $var = 5;
         $this->assertEquals('value is ' . $var, PHPCodeStreamWrapper::template('value is <?= $value ?>', [
-            'value' => $var
+            'value' => $var,
         ]));
     }
 
@@ -64,7 +64,7 @@ class PHPWrapperTest extends TestCase
         $this->assertTrue($stream->write("\n") !== null);
 
         $this->assertTrue(PHPCodeStreamWrapper::streamTemplate($stream, '<?= $value ?>', [
-            'value' => 'second line'
+            'value' => 'second line',
         ]));
 
         $this->assertEquals("first line\nsecond line", $stream);

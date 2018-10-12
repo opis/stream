@@ -45,8 +45,12 @@ class CSVPrinter
      * @param string $enclosure
      * @param string $escape
      */
-    public function __construct(IStream $stream, string $delimiter = ',', string $enclosure = '"', string $escape = '\\')
-    {
+    public function __construct(
+        IStream $stream,
+        string $delimiter = ',',
+        string $enclosure = '"',
+        string $escape = '\\'
+    ) {
         if ($stream->isClosed() || !$stream->isWritable()) {
             throw new InvalidArgumentException('Stream is not writable');
         }

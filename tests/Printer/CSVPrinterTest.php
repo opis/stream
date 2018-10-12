@@ -17,8 +17,8 @@
 
 namespace Opis\Stream\Test\Printer;
 
+use Opis\Stream\PHPDataStream;
 use Opis\Stream\Printer\CSVPrinter;
-use Opis\Stream\Stream;
 use PHPUnit\Framework\TestCase;
 
 class CSVPrinterTest extends TestCase
@@ -34,19 +34,23 @@ class CSVPrinterTest extends TestCase
         $printer->append(['nil', null]);
 
         $csv = implode("\n", [
-            'Name,Value',
-            '"a b",1',
-            '"b c","str val"',
-            'c,-2.2',
-            '3.14,PI',
-            'nil,',
-        ]) . "\n";
+                'Name,Value',
+                '"a b",1',
+                '"b c","str val"',
+                'c,-2.2',
+                '3.14,PI',
+                'nil,',
+            ]) . "\n";
 
         $this->assertEquals($csv, $printer->stream());
     }
 
-    protected function printer(): CSVPrinter
+    /**
+     * @param string $data
+     * @return CSVPrinter
+     */
+    protected function printer(string $data = ''): CSVPrinter
     {
-        return new CSVPrinter(new Stream('data:text/csv,', 'w+'));
+        return new CSVPrinter(new PHPDataStream($data, 'w+', 'text/csv'));
     }
 }

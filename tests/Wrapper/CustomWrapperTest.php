@@ -15,7 +15,6 @@
  * limitations under the License.
  * ============================================================================ */
 
-
 namespace Opis\Stream\Test\Wrapper;
 
 use PHPUnit\Framework\TestCase;
@@ -30,6 +29,7 @@ class CustomWrapperTest extends TestCase
 
         $this->assertEquals('ok', file_get_contents('custom://ok'));
         $this->assertEquals('ok ok ok', file_get_contents('custom://ok ok ok'));
+        $this->assertEquals(5, filesize('custom://12345'));
 
         $this->assertTrue(CustomWrapper::unregister());
         $this->assertFalse(CustomWrapper::isRegistered());

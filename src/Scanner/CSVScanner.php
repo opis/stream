@@ -48,8 +48,13 @@ class CSVScanner
      * @param string $escape
      * @param int $longest_line
      */
-    public function __construct(IStream $stream, string $delimiter = ',', string $enclosure = '"', string $escape = '\\', int $longest_line = 0)
-    {
+    public function __construct(
+        IStream $stream,
+        string $delimiter = ',',
+        string $enclosure = '"',
+        string $escape = '\\',
+        int $longest_line = 0
+    ) {
         if ($stream->isClosed() || !$stream->isReadable()) {
             throw new InvalidArgumentException('Stream is not readable');
         }

@@ -51,8 +51,13 @@ class DataStream implements IStream
      * @param int|null $updated
      * @param array $meta
      */
-    public function __construct(string $data, string $mode = 'rb', ?int $created = null, ?int $updated = null, array $meta = [])
-    {
+    public function __construct(
+        string $data,
+        string $mode = 'rb',
+        ?int $created = null,
+        ?int $updated = null,
+        array $meta = []
+    ) {
         $this->content = $data;
         $this->length = strlen($data);
 
@@ -81,19 +86,32 @@ class DataStream implements IStream
         $updated = $updated ?? $created;
 
         $this->stat = [
-            0 => 0, 'dev' => 0,
-            1 => 0, 'ino' => 0,
-            2 => 0, 'mode' => 0,
-            3 => 0, 'nlink' => 0,
-            4 => 0, 'uid' => 0,
-            5 => 0, 'gid' => 0,
-            6 => 0, 'rdev' => 0,
-            7 => $this->length, 'size' => $this->length,
-            8 => 0, 'atime' => 0,
-            9 => $updated, 'mtime' => $updated,
-            10 => $created, 'ctime' => $created,
-            11 => -1, 'blksize' => -1,
-            12 => -1, 'blocks' => -1,
+            0 => 0,
+            'dev' => 0,
+            1 => 0,
+            'ino' => 0,
+            2 => 0,
+            'mode' => 0,
+            3 => 0,
+            'nlink' => 0,
+            4 => 0,
+            'uid' => 0,
+            5 => 0,
+            'gid' => 0,
+            6 => 0,
+            'rdev' => 0,
+            7 => $this->length,
+            'size' => $this->length,
+            8 => 0,
+            'atime' => 0,
+            9 => $updated,
+            'mtime' => $updated,
+            10 => $created,
+            'ctime' => $created,
+            11 => -1,
+            'blksize' => -1,
+            12 => -1,
+            'blocks' => -1,
         ];
     }
 

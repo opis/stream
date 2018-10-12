@@ -18,7 +18,7 @@
 
 namespace Opis\Stream\Test\Scanner;
 
-use Opis\Stream\{Scanner\StandardScanner, Stream};
+use Opis\Stream\{PHPDataStream, Scanner\StandardScanner};
 use PHPUnit\Framework\TestCase;
 
 class StandardScannerTest extends TestCase
@@ -37,8 +37,12 @@ class StandardScannerTest extends TestCase
         $this->assertTrue($scanner->isEOF());
     }
 
+    /**
+     * @param string ...$lines
+     * @return StandardScanner
+     */
     protected function scanner(string ...$lines): StandardScanner
     {
-        return new StandardScanner(new Stream('data://text/plain,' . implode("\n", $lines)));
+        return new StandardScanner(new PHPDataStream(implode("\n", $lines)));
     }
 }

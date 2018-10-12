@@ -137,8 +137,11 @@ abstract class AbstractContentStreamWrapper implements IStreamWrapper
      * @param int $flags
      * @return array|null
      */
-    public function url_stat(string $path, /** @noinspection PhpUnusedParameterInspection */int $flags): ?array
-    {
+    public function url_stat(
+        string $path,
+        /** @noinspection PhpUnusedParameterInspection */
+        int $flags
+    ): ?array {
         if (($stream = $this->stream($path, 'rb')) === null) {
             return null;
         }
