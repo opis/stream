@@ -27,6 +27,8 @@ class Content implements IContent
     protected $updated;
     /** @var string|null */
     protected $type;
+    /** @var bool */
+    protected $callable;
 
     /**
      * Content constructor.
@@ -37,6 +39,7 @@ class Content implements IContent
      */
     public function __construct($data, ?int $created = null, ?int $updated = null, ?string $type = null)
     {
+        $this->callable = is_callable($data);
         $this->data = $data;
         $this->created = $created;
         $this->updated = $updated;
@@ -48,8 +51,13 @@ class Content implements IContent
      */
     public function data(?array $options = null): ?string
     {
-        $data = is_callable($this->data) ? ($this->data)($options) : $this->data;
-        return is_string($data) ? $data : null;
+        $data = $this->callable ? ($options ? ($this->data)($options) : ($this->data)()) : $this->data;
+
+        if (is_scalar($data) || (is_object($data) && method_exists($data, '__toString'))) {
+            return (string)$data;
+        }
+
+        return null;
     }
 
     /**

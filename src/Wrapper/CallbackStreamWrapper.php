@@ -49,15 +49,7 @@ class CallbackStreamWrapper extends AbstractContentStreamWrapper
      */
     protected function getCallbackContent(callable $func): ?IContent
     {
-        return new Content(function (?array $options = null) use ($func) : ?string {
-            $data = $options ? $func($options) : $func();
-
-            if (is_scalar($data) || (is_object($data) && method_exists($data, '__toString'))) {
-                return (string)$data;
-            }
-
-            return null;
-        });
+        return new Content($func);
     }
 
     /**
