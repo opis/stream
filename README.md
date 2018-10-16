@@ -8,12 +8,6 @@ Opis Stream
 Stream abstraction
 ------------------
 
-Work in progress...
-
-### Documentation
-
-The full documentation for this library can be found [here][documentation].
-
 ### License
 
 **Opis Stream** is licensed under the [Apache License, Version 2.0][apache_license].
@@ -36,12 +30,12 @@ Or you could directly reference it into your `composer.json` file as a dependenc
 ```json
 {
     "require": {
-        "opis/stream": "1.0.x-dev"
+        "opis/stream": "^1.0"
     }
 }
 ```
 
-[documentation]: https://www.opis.io/#
+[documentation]: https://www.opis.io/stream
 [apache_license]: https://www.apache.org/licenses/LICENSE-2.0 "Apache License"
 [Packagist]: https://packagist.org/packages/opis/stream "Packagist"
 [Composer]: https://getcomposer.org "Composer"
