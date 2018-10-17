@@ -21,8 +21,8 @@ use Opis\Stream\{DataStream, IContent, IStream, IStreamWrapper};
 
 abstract class AbstractContentStreamWrapper implements IStreamWrapper
 {
-    /** @var bool */
-    protected static $registered = false;
+    /** @var bool[] */
+    private static $registered = [];
 
     /** @var IContent[] */
     protected static $cached = [];
@@ -242,14 +242,16 @@ abstract class AbstractContentStreamWrapper implements IStreamWrapper
      */
     final public static function register(): bool
     {
-        if (static::$registered) {
+        $protocol = static::protocol();
+        if (isset(self::$registered[$protocol])) {
             return true;
         }
-        if (!stream_wrapper_register(static::protocol(), static::class, static::protocolFlags())) {
+
+        if (!stream_wrapper_register($protocol, static::class, static::protocolFlags())) {
             return false;
         }
 
-        static::$registered = true;
+        self::$registered[$protocol] = true;
 
         return true;
     }
@@ -259,11 +261,13 @@ abstract class AbstractContentStreamWrapper implements IStreamWrapper
      */
     final public static function unregister(): bool
     {
-        if (!static::$registered || !stream_wrapper_unregister(static::protocol())) {
+        $protocol = static::protocol();
+
+        if (!isset(self::$registered[$protocol]) || !stream_wrapper_unregister($protocol)) {
             return false;
         }
 
-        static::$registered = false;
+        unset(self::$registered[$protocol]);
 
         return true;
     }
@@ -273,7 +277,7 @@ abstract class AbstractContentStreamWrapper implements IStreamWrapper
      */
     final public static function isRegistered(): bool
     {
-        return static::$registered;
+        return isset(self::$registered[static::protocol()]);
     }
 
     /**
