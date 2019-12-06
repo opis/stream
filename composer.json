@@ -23,7 +23,7 @@
   },
   "require-dev": {
     "phpunit/phpunit": "^7.0",
-    "ext-finfo": "*"
+    "ext-fileinfo": "*"
   },
   "autoload": {
     "psr-4": {
