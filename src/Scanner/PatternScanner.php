@@ -31,6 +31,7 @@ class PatternScanner
     /** @var string|null */
     protected $buffer = '';
 
+    /** @var string|null */
     protected $skipped = null;
 
     /**

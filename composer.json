@@ -6,7 +6,7 @@
     "stream",
     "resource"
   ],
-  "homepage": "http://opis.io",
+  "homepage": "https://opis.io",
   "license": "Apache-2.0",
   "authors": [
     {
@@ -22,7 +22,8 @@
     "php": "^7.1"
   },
   "require-dev": {
-    "phpunit/phpunit": "^7.0"
+    "phpunit/phpunit": "^7.0",
+    "ext-finfo": "*"
   },
   "autoload": {
     "psr-4": {

@@ -15,7 +15,6 @@
  * limitations under the License.
  * ============================================================================ */
 
-
 namespace Opis\Stream\Printer;
 
 use InvalidArgumentException;

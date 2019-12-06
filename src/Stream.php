@@ -43,6 +43,7 @@ class Stream implements IStream
         } else {
             $resource = $stream;
         }
+
         unset($stream);
 
         if (!is_resource($resource)) {
@@ -339,7 +340,6 @@ class Stream implements IStream
 
         return flock($this->resource, $operation);
     }
-
 
     /**
      * @inheritDoc
