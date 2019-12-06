@@ -149,6 +149,14 @@ abstract class AbstractContentStreamWrapper implements IStreamWrapper
     }
 
     /**
+     * @inheritDoc
+     */
+    public function stream_set_option(int $option, int $arg1, ?int $arg2 = null): bool
+    {
+        return false;
+    }
+
+    /**
      * @param string $path
      * @param string $mode
      * @return null|IStream
