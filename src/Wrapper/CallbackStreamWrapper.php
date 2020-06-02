@@ -17,7 +17,7 @@
 
 namespace Opis\Stream\Wrapper;
 
-use Opis\Stream\{ContentContainer, Content};
+use Opis\Stream\Content;
 
 class CallbackStreamWrapper extends ContentStreamWrapper
 {
@@ -49,7 +49,7 @@ class CallbackStreamWrapper extends ContentStreamWrapper
      */
     protected function getCallbackContent(callable $func): ?Content
     {
-        return new ContentContainer($func);
+        return new Content($func);
     }
 
     /**

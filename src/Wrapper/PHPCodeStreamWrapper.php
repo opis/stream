@@ -18,7 +18,7 @@
 namespace Opis\Stream\Wrapper;
 
 use Throwable;
-use Opis\Stream\{ContentContainer, Content, Stream};
+use Opis\Stream\{Content, Stream};
 
 class PHPCodeStreamWrapper extends ContentStreamWrapper
 {
@@ -43,7 +43,7 @@ class PHPCodeStreamWrapper extends ContentStreamWrapper
      */
     protected function phpCodeContent(string $code): Content
     {
-        return new ContentContainer($code, null, null, 'text/html');
+        return new Content($code, null, null, 'text/html');
     }
 
     /**

@@ -18,7 +18,7 @@
 
 namespace Opis\Stream\Test\Wrapper;
 
-use Opis\Stream\{ContentContainer, Content, Wrapper\ContentStreamWrapper};
+use Opis\Stream\{Content, Wrapper\ContentStreamWrapper};
 
 class CustomWrapper extends ContentStreamWrapper
 {
@@ -33,7 +33,7 @@ class CustomWrapper extends ContentStreamWrapper
             return null;
         }
 
-        return new ContentContainer($path[1]);
+        return new Content($path[1]);
     }
 
     /**
