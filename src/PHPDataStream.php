@@ -17,7 +17,7 @@
 
 namespace Opis\Stream;
 
-final class PHPDataStream extends Stream
+final class PHPDataStream extends ResourceStream
 {
     /**
      * DataStream constructor.

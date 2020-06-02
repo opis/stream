@@ -18,14 +18,14 @@
 
 namespace Opis\Stream\Test\Wrapper;
 
-use Opis\Stream\{Content, IContent, Wrapper\AbstractContentStreamWrapper};
+use Opis\Stream\{ContentContainer, Content, Wrapper\ContentStreamWrapper};
 
-class CustomWrapper extends AbstractContentStreamWrapper
+class CustomWrapper extends ContentStreamWrapper
 {
     /**
      * @inheritDoc
      */
-    protected function content(string $path): ?IContent
+    protected function content(string $path): ?Content
     {
         $path = explode('://', $path, 2);
 
@@ -33,7 +33,7 @@ class CustomWrapper extends AbstractContentStreamWrapper
             return null;
         }
 
-        return new Content($path[1]);
+        return new ContentContainer($path[1]);
     }
 
     /**

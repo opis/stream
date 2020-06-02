@@ -18,7 +18,7 @@
 namespace Opis\Stream\Scanner;
 
 use finfo;
-use Opis\Stream\IStream;
+use Opis\Stream\Stream;
 
 class MimeScanner
 {
@@ -31,11 +31,11 @@ class MimeScanner
     }
 
     /**
-     * @param IStream $stream
+     * @param Stream $stream
      * @param int|null $max_chars
      * @return string|null
      */
-    public function mime(IStream $stream, ?int $max_chars = null): ?string
+    public function mime(Stream $stream, ?int $max_chars = null): ?string
     {
         if (!$stream->isReadable()) {
             return null;

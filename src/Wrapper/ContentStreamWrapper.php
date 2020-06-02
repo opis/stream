@@ -17,20 +17,20 @@
 
 namespace Opis\Stream\Wrapper;
 
-use Opis\Stream\{DataStream, IContent, IStream, IStreamWrapper};
+use Opis\Stream\{DataStream, Content, Stream, StreamWrapper};
 
-abstract class AbstractContentStreamWrapper implements IStreamWrapper
+abstract class ContentStreamWrapper implements StreamWrapper
 {
     /** @var bool[] */
     private static $registered = [];
 
-    /** @var IContent[] */
+    /** @var Content[] */
     protected static $cached = [];
 
     /** @var resource|null */
     public $context;
 
-    /** @var IStream */
+    /** @var Stream */
     protected $stream = null;
 
     /**
@@ -159,9 +159,9 @@ abstract class AbstractContentStreamWrapper implements IStreamWrapper
     /**
      * @param string $path
      * @param string $mode
-     * @return null|IStream
+     * @return null|Stream
      */
-    protected function stream(string $path, string $mode): ?IStream
+    protected function stream(string $path, string $mode): ?Stream
     {
         $key = $this->cacheKey($path);
         if (!array_key_exists($key, static::$cached)) {
@@ -186,13 +186,13 @@ abstract class AbstractContentStreamWrapper implements IStreamWrapper
     }
 
     /**
-     * @param IContent $content
+     * @param Content $content
      * @param string $path
      * @param string $mode
      * @param array|null $options
-     * @return IStream
+     * @return Stream
      */
-    protected function contentToStream(IContent $content, string $path, string $mode, ?array $options = null): ?IStream
+    protected function contentToStream(Content $content, string $path, string $mode, ?array $options = null): ?Stream
     {
         $data = $content->data($options);
         if ($data === null) {
@@ -218,14 +218,14 @@ abstract class AbstractContentStreamWrapper implements IStreamWrapper
     }
 
     /**
-     * @param IContent $content
+     * @param Content $content
      * @param string $path
      * @param string $mode
      * @param array|null $options
      * @return array
      */
     protected function streamMeta(
-        IContent $content,
+        Content $content,
         string $path,
         string $mode,
         /** @noinspection PhpUnusedParameterInspection */
@@ -241,9 +241,9 @@ abstract class AbstractContentStreamWrapper implements IStreamWrapper
 
     /**
      * @param string $path
-     * @return null|IContent
+     * @return null|Content
      */
-    abstract protected function content(string $path): ?IContent;
+    abstract protected function content(string $path): ?Content;
 
     /**
      * @return bool

@@ -18,18 +18,18 @@
 namespace Opis\Stream\Printer;
 
 use InvalidArgumentException;
-use Opis\Stream\IStream;
+use Opis\Stream\Stream;
 
 class StandardPrinter
 {
-    /** @var IStream */
+    /** @var Stream */
     protected $stream;
 
     /**
      * Printer constructor.
-     * @param IStream $stream
+     * @param Stream $stream
      */
-    public function __construct(IStream $stream)
+    public function __construct(Stream $stream)
     {
         if ($stream->isClosed() || !$stream->isWritable()) {
             throw new InvalidArgumentException('Stream is not writable');
@@ -39,9 +39,9 @@ class StandardPrinter
     }
 
     /**
-     * @return IStream
+     * @return Stream
      */
-    public function stream(): IStream
+    public function stream(): Stream
     {
         return $this->stream;
     }

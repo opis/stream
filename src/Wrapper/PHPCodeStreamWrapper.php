@@ -18,16 +18,16 @@
 namespace Opis\Stream\Wrapper;
 
 use Throwable;
-use Opis\Stream\{Content, IContent, IStream};
+use Opis\Stream\{ContentContainer, Content, Stream};
 
-class PHPCodeStreamWrapper extends AbstractContentStreamWrapper
+class PHPCodeStreamWrapper extends ContentStreamWrapper
 {
     const PROTOCOL = 'php-code';
 
     /**
      * @inheritDoc
      */
-    final protected function content(string $path): ?IContent
+    final protected function content(string $path): ?Content
     {
         $prefix = static::PROTOCOL . '://';
         if (strpos($path, $prefix) !== 0) {
@@ -39,17 +39,17 @@ class PHPCodeStreamWrapper extends AbstractContentStreamWrapper
 
     /**
      * @param string $code
-     * @return IContent
+     * @return Content
      */
-    protected function phpCodeContent(string $code): IContent
+    protected function phpCodeContent(string $code): Content
     {
-        return new Content($code, null, null, 'text/html');
+        return new ContentContainer($code, null, null, 'text/html');
     }
 
     /**
      * @inheritDoc
      */
-    protected function streamMeta(IContent $content, string $path, string $mode, ?array $options = null): array
+    protected function streamMeta(Content $content, string $path, string $mode, ?array $options = null): array
     {
         return [
             'wrapper_type' => static::PROTOCOL,
@@ -130,13 +130,13 @@ class PHPCodeStreamWrapper extends AbstractContentStreamWrapper
     }
 
     /**
-     * @param IStream $stream
+     * @param Stream $stream
      * @param string $code
      * @param array|null $vars
      * @param int $chunk
      * @return bool
      */
-    public static function streamTemplate(IStream $stream, string $code, ?array $vars = null, int $chunk = 512): bool
+    public static function streamTemplate(Stream $stream, string $code, ?array $vars = null, int $chunk = 512): bool
     {
         if ($stream->isClosed() || !$stream->isWritable()) {
             return false;

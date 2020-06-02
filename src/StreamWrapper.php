@@ -17,7 +17,7 @@
 
 namespace Opis\Stream;
 
-interface IStreamWrapper
+interface StreamWrapper
 {
     /**
      * @param string $path

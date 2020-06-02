@@ -18,9 +18,9 @@
 namespace Opis\Stream\Test;
 
 use Opis\Stream\DataStream;
-use Opis\Stream\IStream;
-use Opis\Stream\PHPDataStream;
 use Opis\Stream\Stream;
+use Opis\Stream\PHPDataStream;
+use Opis\Stream\ResourceStream;
 use PHPUnit\Framework\TestCase;
 
 class StreamTest extends TestCase
@@ -31,7 +31,7 @@ class StreamTest extends TestCase
     public function testReadable(callable $factory)
     {
         $data = 'this is data';
-        /** @var IStream $stream */
+        /** @var Stream $stream */
         $stream = $factory($data, 'r');
 
         $this->assertTrue($stream->isReadable());
@@ -68,7 +68,7 @@ class StreamTest extends TestCase
             'c',
         ];
 
-        /** @var IStream $stream */
+        /** @var Stream $stream */
         $stream = $factory(implode("\n", $lines), 'r');
 
         $list = [];
@@ -84,7 +84,7 @@ class StreamTest extends TestCase
      */
     public function testWritable(callable $factory)
     {
-        /** @var IStream $stream */
+        /** @var Stream $stream */
         $stream = $factory('', 'w');
 
         $this->assertFalse($stream->isReadable());
@@ -95,7 +95,7 @@ class StreamTest extends TestCase
         $this->assertEquals(4, $stream->write('this'));
         $this->assertEquals(1, $stream->write('#'));
 
-        $this->assertTrue($stream->seek(-1, Stream::SEEK_CUR));
+        $this->assertTrue($stream->seek(-1, ResourceStream::SEEK_CUR));
         $this->assertEquals(4, $stream->write(' is '));
         $this->assertEquals(4, $stream->write('data'));
 
@@ -108,16 +108,16 @@ class StreamTest extends TestCase
     public function testSeek(callable $factory)
     {
         $data = 'this is data';
-        /** @var IStream $stream */
+        /** @var Stream $stream */
         $stream = $factory($data, 'r+');
 
         $this->assertTrue($stream->isSeekable());
 
-        $stream->seek(5, Stream::SEEK_SET);
+        $stream->seek(5, ResourceStream::SEEK_SET);
 
         $this->assertEquals('is', $stream->read(2));
 
-        $stream->seek(1, Stream::SEEK_CUR);
+        $stream->seek(1, ResourceStream::SEEK_CUR);
 
         $this->assertEquals('data', $stream->read(4));
 
@@ -139,7 +139,7 @@ class StreamTest extends TestCase
     {
         $list[] = [
             function ($data, $mode = 'r') {
-                return new Stream('data://text/plain,' . $data, $mode);
+                return new ResourceStream('data://text/plain,' . $data, $mode);
             },
         ];
 

@@ -18,18 +18,18 @@
 namespace Opis\Stream\Printer;
 
 use InvalidArgumentException;
-use Opis\Stream\IStream;
+use Opis\Stream\Stream;
 
 class CopyPrinter
 {
-    /** @var IStream */
+    /** @var Stream */
     protected $stream;
 
     /**
      * CopyPrinter constructor.
-     * @param IStream $stream
+     * @param Stream $stream
      */
-    public function __construct(IStream $stream)
+    public function __construct(Stream $stream)
     {
         if ($stream->isClosed() || !$stream->isWritable()) {
             throw new InvalidArgumentException('Stream is not writable');
@@ -39,19 +39,19 @@ class CopyPrinter
     }
 
     /**
-     * @return IStream
+     * @return Stream
      */
-    public function stream(): IStream
+    public function stream(): Stream
     {
         return $this->stream;
     }
 
     /**
-     * @param IStream $source
+     * @param Stream $source
      * @param int $chunk
      * @return int
      */
-    public function copy(IStream $source, int $chunk = 8192): int
+    public function copy(Stream $source, int $chunk = 8192): int
     {
         $total = 0;
 

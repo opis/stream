@@ -18,18 +18,18 @@
 namespace Opis\Stream\Scanner;
 
 use InvalidArgumentException;
-use Opis\Stream\IStream;
+use Opis\Stream\Stream;
 
 class StandardScanner
 {
-    /** @var IStream */
+    /** @var Stream */
     protected $stream;
 
     /**
      * Scanner constructor.
-     * @param IStream $stream
+     * @param Stream $stream
      */
-    public function __construct(IStream $stream)
+    public function __construct(Stream $stream)
     {
         if ($stream->isClosed() || !$stream->isReadable()) {
             throw new InvalidArgumentException('Stream is not readable');
@@ -39,9 +39,9 @@ class StandardScanner
     }
 
     /**
-     * @return IStream
+     * @return Stream
      */
-    public function stream(): IStream
+    public function stream(): Stream
     {
         return $this->stream;
     }

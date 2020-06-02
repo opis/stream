@@ -17,360 +17,140 @@
 
 namespace Opis\Stream;
 
-use InvalidArgumentException;
-
-class Stream implements IStream
+interface Stream
 {
-    /** @var null|resource */
-    protected $resource = null;
-
-    /** @var null|string */
-    protected $to_string = null;
+    const SEEK_SET = SEEK_SET;
+    const SEEK_CUR = SEEK_CUR;
+    const SEEK_END = SEEK_END;
 
     /**
-     * @param resource|string $stream
-     * @param string $mode
+     * Consumes data from stream
+     * @param int $length
+     * @return string|null
      */
-    public function __construct($stream, string $mode = 'rb')
-    {
-        if (is_string($stream)) {
-            $resource = @fopen($stream, $mode);
-            if ($resource === false) {
-                throw new InvalidArgumentException("Invalid stream {$stream}");
-            }
-        } elseif ($stream instanceof IStream) {
-            $resource = $stream->resource();
-        } else {
-            $resource = $stream;
-        }
-
-        unset($stream);
-
-        if (!is_resource($resource)) {
-            throw new InvalidArgumentException("Stream must be a resource or a string");
-        }
-
-        if (get_resource_type($resource) !== 'stream') {
-            throw new InvalidArgumentException("Resource must be a stream");
-        }
-
-        $this->resource = $resource;
-    }
+    public function read(int $length = 8192): ?string;
 
     /**
-     * @inheritDoc
+     * Consumes the current line
+     * Line delimiters \r & \n are trimmed
+     * @param int|null $maxLength
+     * @return null|string
      */
-    public function isClosed(): bool
-    {
-        return $this->resource === null;
-    }
+    public function readLine(?int $maxLength = null): ?string;
 
     /**
-     * @inheritDoc
+     * Consumes all the remaining data from stream
+     * @return string|null
      */
-    public function size(): ?int
-    {
-        if (!$this->resource) {
-            return null;
-        }
-        return fstat($this->resource)['size'] ?? null;
-    }
+    public function readToEnd(): ?string;
 
     /**
-     * @inheritDoc
+     * Appends data to stream
+     * @param string $string
+     * @return int|null
      */
-    public function tell(): ?int
-    {
-        if (!$this->resource) {
-            return null;
-        }
-
-        $pos = ftell($this->resource);
-
-        if ($pos === false) {
-            return null;
-        }
-
-        return $pos;
-    }
+    public function write(string $string): ?int;
 
     /**
-     * @inheritDoc
+     * @param int $size
+     * @return bool
      */
-    public function isEOF(): bool
-    {
-        return !$this->resource || feof($this->resource);
-    }
+    public function truncate(int $size): bool;
 
     /**
-     * @inheritDoc
+     * @return bool
      */
-    public function isSeekable(): bool
-    {
-        return $this->resource ? (bool)$this->metadata('seekable') : false;
-    }
+    public function flush(): bool;
 
     /**
-     * @inheritDoc
+     * Current position of the pointer
+     * @return int|null
      */
-    public function seek(int $offset, int $whence = SEEK_SET): bool
-    {
-        if (!$this->resource) {
-            return false;
-        }
-
-        if (fseek($this->resource, $offset, $whence) !== 0) {
-            return false;
-        }
-
-        return true;
-    }
+    public function tell(): ?int;
 
     /**
-     * @inheritDoc
+     * Sets the pointer position
+     * @param int $offset
+     * @param int $whence
+     * @return bool
      */
-    public function rewind(): bool
-    {
-        return $this->seek(0);
-    }
+    public function seek(int $offset, int $whence = SEEK_SET): bool;
 
     /**
-     * @inheritDoc
+     * Performs seek(0)
+     * @return bool
      */
-    public function isWritable(): bool
-    {
-        $mode = $this->metadata('mode');
-
-        if (!$mode) {
-            return false;
-        }
-
-        $flags = ['w', 'a', 'x', 'c'];
-        if (!isset($mode[1])) {
-            return in_array($mode, $flags);
-        }
-
-        array_unshift($flags, '+');
-
-        foreach ($flags as $f) {
-            if (strpos($mode, $f) !== false) {
-                return true;
-            }
-        }
-
-        return false;
-    }
+    public function rewind(): bool;
 
     /**
-     * @inheritDoc
+     * Closes the stream
      */
-    public function write(string $string): ?int
-    {
-        if (!$this->resource) {
-            return null;
-        }
-
-        $len = fwrite($this->resource, $string);
-
-        if ($len === false) {
-            return null;
-        }
-
-        return $len;
-    }
+    public function close(): void;
 
     /**
-     * @inheritDoc
+     * Checks if the stream is writable
+     * @return bool
      */
-    public function truncate(int $size): bool
-    {
-        if (!$this->resource) {
-            return false;
-        }
-
-        return ftruncate($this->resource, $size);
-    }
+    public function isWritable(): bool;
 
     /**
-     * @inheritDoc
+     * Checks if the stream is readable
+     * @return bool
      */
-    public function flush(): bool
-    {
-        if (!$this->resource) {
-            return false;
-        }
-
-        return fflush($this->resource);
-    }
+    public function isReadable(): bool;
 
     /**
-     * @inheritDoc
+     * Checks if the stream is seekable
+     * @return bool
      */
-    public function isReadable(): bool
-    {
-        $mode = $this->metadata('mode');
-
-        if (!$mode) {
-            return false;
-        }
-
-        if (strpos($mode, 'r') !== false) {
-            return true;
-        }
-
-        if (strpos($mode, '+') !== false) {
-            return true;
-        }
-
-        return false;
-    }
+    public function isSeekable(): bool;
 
     /**
-     * @inheritDoc
+     * Checks if pointer reached end-of-file
+     * @return bool
      */
-    public function read(int $length = 8192): ?string
-    {
-        if (!$this->resource || feof($this->resource)) {
-            return null;
-        }
-
-        $result = fread($this->resource, $length);
-
-        if ($result === false) {
-            return null;
-        }
-
-        return $result;
-    }
+    public function isEOF(): bool;
 
     /**
-     * @inheritDoc
+     * Checks if the stream was closed
+     * @return bool
      */
-    public function readLine(?int $maxLength = null): ?string
-    {
-        if (!$this->resource) {
-            return null;
-        }
-
-        $result = $maxLength ? fgets($this->resource, $maxLength) : fgets($this->resource);
-
-        if ($result === false) {
-            return null;
-        }
-
-        return rtrim($result, "\r\n");
-    }
+    public function isClosed(): bool;
 
     /**
-     * @inheritDoc
+     * Gets stream size
+     * @return int|null
      */
-    public function readToEnd(): ?string
-    {
-        if (!$this->resource) {
-            return null;
-        }
-
-        $result = stream_get_contents($this->resource);
-
-        if ($result === false) {
-            return null;
-        }
-
-        return $result;
-    }
+    public function size(): ?int;
 
     /**
-     * @inheritDoc
+     * @return array|null
      */
-    public function metadata(string $key = null)
-    {
-        if (!$this->resource) {
-            return null;
-        }
-
-        $meta = stream_get_meta_data($this->resource);
-        if ($key === null) {
-            return $meta;
-        }
-
-        return $meta[$key] ?? null;
-    }
+    public function stat(): ?array;
 
     /**
-     * @inheritDoc
+     * @param int $operation
+     * @return bool
      */
-    public function resource()
-    {
-        return $this->resource;
-    }
+    public function lock(int $operation): bool;
 
     /**
-     * @inheritDoc
+     * Get stream meta information
+     * @param string|null $key
+     * @return mixed|array|null
+     * @see stream_get_meta_data()
      */
-    public function close(): void
-    {
-        if ($this->resource) {
-            $res = $this->resource;
-            $this->resource = null;
-            fclose($res);
-        }
-        $this->to_string = '';
-    }
+    public function metadata(string $key = null);
 
     /**
-     * @inheritDoc
+     * Gets the associated resource, if any
+     * @return resource|null
      */
-    public function stat(): ?array
-    {
-        if (!$this->resource) {
-            return null;
-        }
-
-        return @fstat($this->resource) ?: null;
-    }
+    public function resource();
 
     /**
-     * @inheritDoc
+     * Gets all stream data and restores pointer position if possible
+     * @return string
      */
-    public function lock(int $operation): bool
-    {
-        if (!$this->resource) {
-            return false;
-        }
-
-        return flock($this->resource, $operation);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function __toString()
-    {
-        if ($this->to_string !== null) {
-            return $this->to_string;
-        }
-
-        if (!$this->resource) {
-            return '';
-        }
-
-        $current = ftell($this->resource);
-        $seek = fseek($this->resource, 0) === 0;
-        $contents = stream_get_contents($this->resource);
-        if ($seek && $current !== false) {
-            fseek($this->resource, $current);
-        }
-
-        $this->to_string = $contents === false ? '' : $contents;
-
-        return $this->to_string;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function __destruct()
-    {
-        $this->close();
-    }
+    public function __toString();
 }

@@ -18,11 +18,11 @@
 namespace Opis\Stream\Scanner;
 
 use InvalidArgumentException;
-use Opis\Stream\IStream;
+use Opis\Stream\Stream;
 
 class CSVScanner
 {
-    /** @var IStream */
+    /** @var Stream */
     protected $stream;
 
     /** @var string */
@@ -42,14 +42,14 @@ class CSVScanner
 
     /**
      * CSVScanner constructor.
-     * @param IStream $stream
+     * @param Stream $stream
      * @param string $delimiter
      * @param string $enclosure
      * @param string $escape
      * @param int $longest_line
      */
     public function __construct(
-        IStream $stream,
+        Stream $stream,
         string $delimiter = ',',
         string $enclosure = '"',
         string $escape = '\\',
@@ -74,9 +74,9 @@ class CSVScanner
     }
 
     /**
-     * @return IStream
+     * @return Stream
      */
-    public function stream(): IStream
+    public function stream(): Stream
     {
         return $this->stream;
     }

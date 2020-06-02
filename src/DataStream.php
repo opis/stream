@@ -17,7 +17,7 @@
 
 namespace Opis\Stream;
 
-class DataStream implements IStream
+class DataStream implements Stream
 {
     /** @var null */
     protected $content = null;

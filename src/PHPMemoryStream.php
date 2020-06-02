@@ -17,7 +17,7 @@
 
 namespace Opis\Stream;
 
-final class PHPMemoryStream extends Stream
+final class PHPMemoryStream extends ResourceStream
 {
     /**
      * PHPMemoryStream constructor.

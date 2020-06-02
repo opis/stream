@@ -18,12 +18,12 @@
 namespace Opis\Stream\Printer;
 
 use InvalidArgumentException;
-use Opis\Stream\IStream;
+use Opis\Stream\Stream;
 use Opis\Stream\Scanner\CSVScanner;
 
 class CSVPrinter
 {
-    /** @var IStream */
+    /** @var Stream */
     protected $stream;
 
     /** @var string */
@@ -40,13 +40,13 @@ class CSVPrinter
 
     /**
      * CSVPrinter constructor.
-     * @param IStream $stream
+     * @param Stream $stream
      * @param string $delimiter
      * @param string $enclosure
      * @param string $escape
      */
     public function __construct(
-        IStream $stream,
+        Stream $stream,
         string $delimiter = ',',
         string $enclosure = '"',
         string $escape = '\\'
@@ -69,9 +69,9 @@ class CSVPrinter
     }
 
     /**
-     * @return IStream
+     * @return Stream
      */
-    public function stream(): IStream
+    public function stream(): Stream
     {
         return $this->stream;
     }

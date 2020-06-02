@@ -17,70 +17,29 @@
 
 namespace Opis\Stream;
 
-class Content implements IContent
+interface Content
 {
-    /** @var string|callable */
-    protected $data;
-    /** @var int|null */
-    protected $created;
-    /** @var int|null */
-    protected $updated;
-    /** @var string|null */
-    protected $type;
-    /** @var bool */
-    protected $callable;
+    /**
+     * @param array|null $options
+     * @return string|null
+     */
+    public function data(?array $options = null): ?string;
 
     /**
-     * Content constructor.
-     * @param string|callable $data
-     * @param int|null $created
-     * @param int|null $updated
-     * @param null|string $type
+     * Created
+     * @return int|null
      */
-    public function __construct($data, ?int $created = null, ?int $updated = null, ?string $type = null)
-    {
-        $this->callable = is_callable($data);
-        $this->data = $data;
-        $this->created = $created;
-        $this->updated = $updated;
-        $this->type = $type;
-    }
+    public function created(): ?int;
 
     /**
-     * @inheritDoc
+     * Last modified
+     * @return int|null
      */
-    public function data(?array $options = null): ?string
-    {
-        $data = $this->callable ? ($options ? ($this->data)($options) : ($this->data)()) : $this->data;
-
-        if (is_scalar($data) || (is_object($data) && method_exists($data, '__toString'))) {
-            return (string)$data;
-        }
-
-        return null;
-    }
+    public function updated(): ?int;
 
     /**
-     * @inheritDoc
+     * Content type
+     * @return string|null
      */
-    public function created(): ?int
-    {
-        return $this->created;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function updated(): ?int
-    {
-        return $this->updated;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function type(): ?string
-    {
-        return $this->type;
-    }
+    public function type(): ?string;
 }

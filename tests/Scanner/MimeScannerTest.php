@@ -19,7 +19,7 @@ namespace Opis\Stream\Test\Scanner;
 
 use PHPUnit\Framework\TestCase;
 use Opis\Stream\Scanner\MimeScanner;
-use Opis\Stream\{DataStream, PHPDataStream, Stream};
+use Opis\Stream\{DataStream, PHPDataStream, ResourceStream};
 
 class MimeScannerTest extends TestCase
 {
@@ -29,7 +29,7 @@ class MimeScannerTest extends TestCase
     /**
      * @inheritDoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->scanner = new MimeScanner();
     }
@@ -59,7 +59,7 @@ class MimeScannerTest extends TestCase
 
     public function testPhp()
     {
-        $stream = new Stream(__FILE__);
+        $stream = new ResourceStream(__FILE__);
         $this->assertEquals('text/x-php', $this->scanner->mime($stream));
     }
 }

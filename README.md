@@ -1,6 +1,6 @@
 Opis Stream
 ===========
-[![Build Status](https://travis-ci.org/opis/stream.svg?branch=master)](https://travis-ci.org/opis/stream)
+[![Tests](https://github.com/opis/stream/workflows/Tests/badge.svg)](https://github.com/opis/stream/actions)
 [![Latest Stable Version](https://poser.pugx.org/opis/stream/version.png)](https://packagist.org/packages/opis/stream)
 [![Latest Unstable Version](https://poser.pugx.org/opis/stream/v/unstable.png)](https://packagist.org/packages/opis/stream)
 [![License](https://poser.pugx.org/opis/stream/license.png)](https://packagist.org/packages/opis/stream)
@@ -8,13 +8,13 @@ Opis Stream
 Stream abstraction
 ------------------
 
-### License
+## License
 
-**Opis Stream** is licensed under the [Apache License, Version 2.0][apache_license].
+**Opis Stream** is licensed under the [Apache License, Version 2.0][license].
 
-### Requirements
+## Requirements
 
-* PHP ^7.1
+* PHP ^7.4
 
 ## Installation
 
@@ -30,12 +30,12 @@ Or you could directly reference it into your `composer.json` file as a dependenc
 ```json
 {
     "require": {
-        "opis/stream": "^1.0"
+        "opis/stream": "^2020"
     }
 }
 ```
 
 [documentation]: https://www.opis.io/stream
-[apache_license]: https://www.apache.org/licenses/LICENSE-2.0 "Apache License"
+[license]: https://www.apache.org/licenses/LICENSE-2.0 "Apache License"
 [Packagist]: https://packagist.org/packages/opis/stream "Packagist"
 [Composer]: https://getcomposer.org "Composer"

@@ -17,16 +17,16 @@
 
 namespace Opis\Stream\Wrapper;
 
-use Opis\Stream\{Content, IContent};
+use Opis\Stream\{ContentContainer, Content};
 
-class CallbackStreamWrapper extends AbstractContentStreamWrapper
+class CallbackStreamWrapper extends ContentStreamWrapper
 {
     const PROTOCOL = 'callback';
 
     /**
      * @inheritDoc
      */
-    protected function content(string $path): ?IContent
+    protected function content(string $path): ?Content
     {
         $prefix = static::PROTOCOL . '://';
         if (strpos($path, $prefix) !== 0) {
@@ -45,11 +45,11 @@ class CallbackStreamWrapper extends AbstractContentStreamWrapper
 
     /**
      * @param callable $func
-     * @return null|IContent
+     * @return null|Content
      */
-    protected function getCallbackContent(callable $func): ?IContent
+    protected function getCallbackContent(callable $func): ?Content
     {
-        return new Content($func);
+        return new ContentContainer($func);
     }
 
     /**
