@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2018 Zindex Software
+ * Copyright 2018-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,29 +19,21 @@ namespace Opis\Stream;
 
 class DataStream implements Stream
 {
-    /** @var null */
-    protected $content = null;
+    protected ?string $content;
 
-    /** @var int */
-    protected $length = 0;
+    protected int $length = 0;
 
-    /** @var int */
-    protected $pointer = 0;
+    protected int $pointer = 0;
 
-    /** @var int[] */
-    protected $stat;
+    protected ?array $stat;
 
-    /** @var bool */
-    protected $readable = false;
+    protected bool $readable = false;
 
-    /** @var bool */
-    protected $writable = false;
+    protected bool $writable = false;
 
-    /** @var bool */
-    protected $seekable = true;
+    protected bool $seekable = true;
 
-    /** @var array */
-    protected $meta;
+    protected ?array $meta;
 
     /**
      * DataStream constructor.
@@ -304,6 +296,7 @@ class DataStream implements Stream
     {
         $this->content = null;
         $this->stat = null;
+        $this->meta = null;
         $this->length = $this->pointer = 0;
     }
 
@@ -384,7 +377,7 @@ class DataStream implements Stream
      */
     public function metadata(string $key = null)
     {
-        if ($this->content === null) {
+        if ($this->meta === null) {
             return null;
         }
 

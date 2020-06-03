@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2018 Zindex Software
+ * Copyright 2018-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,22 +22,20 @@ use Opis\Stream\Stream;
 
 class PatternScanner
 {
-    /** @var Stream */
-    protected $stream;
+
+    protected Stream $stream;
 
     /** @var string[]|null */
-    protected $tokens = null;
+    protected ?array $tokens = null;
 
-    /** @var string|null */
-    protected $buffer = '';
+    protected string $buffer = '';
 
-    /** @var string|null */
-    protected $skipped = null;
+    protected ?string $skipped = null;
 
     /**
      * PatternScanner constructor.
      * @param Stream $stream
-     * @param array|null $tokens
+     * @param string[]|null $tokens
      */
     public function __construct(Stream $stream, ?array $tokens = null)
     {

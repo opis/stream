@@ -1,6 +1,6 @@
 <?php
 /* ===========================================================================
- * Copyright 2018 Zindex Software
+ * Copyright 2018-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,9 @@ class ResourceStream implements Stream
     /** @var null|resource */
     protected $resource = null;
 
-    /** @var null|string */
-    protected $to_string = null;
+    protected ?string $str = null;
+
+    protected bool $detached = false;
 
     /**
      * @param resource|string $stream
@@ -305,6 +306,17 @@ class ResourceStream implements Stream
     }
 
     /**
+     * Marks resource as detached, so it won't be closed when this class is destructed.
+     * You have to close the resource.
+     * @return resource|null
+     */
+    public function detach()
+    {
+        $this->detached = true;
+        return $this->resource;
+    }
+
+    /**
      * @inheritDoc
      */
     public function close(): void
@@ -314,7 +326,7 @@ class ResourceStream implements Stream
             $this->resource = null;
             fclose($res);
         }
-        $this->to_string = '';
+        $this->str = '';
     }
 
     /**
@@ -346,8 +358,8 @@ class ResourceStream implements Stream
      */
     public function __toString()
     {
-        if ($this->to_string !== null) {
-            return $this->to_string;
+        if ($this->str !== null) {
+            return $this->str;
         }
 
         if (!$this->resource) {
@@ -361,9 +373,9 @@ class ResourceStream implements Stream
             fseek($this->resource, $current);
         }
 
-        $this->to_string = $contents === false ? '' : $contents;
+        $this->str = $contents === false ? '' : $contents;
 
-        return $this->to_string;
+        return $this->str;
     }
 
     /**
@@ -371,6 +383,8 @@ class ResourceStream implements Stream
      */
     public function __destruct()
     {
-        $this->close();
+        if (!$this->detached) {
+            $this->close();
+        }
     }
 }

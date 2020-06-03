@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2018 Zindex Software
+ * Copyright 2018-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,17 +23,14 @@ use Opis\Stream\Scanner\CSVScanner;
 
 class CSVPrinter
 {
-    /** @var Stream */
-    protected $stream;
 
-    /** @var string */
-    protected $delimiter;
+    protected Stream $stream;
 
-    /** @var string */
-    protected $enclosure;
+    protected string $delimiter;
 
-    /** @var string */
-    protected $escape;
+    protected string $enclosure;
+
+    protected string $escape;
 
     /** @var resource */
     protected $resource;

@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2018 Zindex Software
+ * Copyright 2018-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -90,7 +90,7 @@ class PHPCodeStreamWrapper extends ContentStreamWrapper
             }
         }
 
-        $ret = (function (string $_____CODE_____, ?array $_____VARS_____) {
+        $ret = (static function (string $_____CODE_____, ?array $_____VARS_____) {
             if ($_____VARS_____) {
                 extract($_____VARS_____, EXTR_SKIP);
             }

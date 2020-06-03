@@ -19,16 +19,17 @@ namespace Opis\Stream;
 
 class Content
 {
+
     /** @var string|callable */
     protected $data;
-    /** @var int|null */
-    protected $created;
-    /** @var int|null */
-    protected $updated;
-    /** @var string|null */
-    protected $type;
-    /** @var bool */
-    protected $callable;
+
+    protected ?int $created;
+
+    protected ?int $updated;
+
+    protected ?string $type;
+
+    protected bool $callable;
 
     /**
      * Content constructor.

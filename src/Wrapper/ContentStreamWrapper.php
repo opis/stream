@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2018 Zindex Software
+ * Copyright 2018-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,16 +22,15 @@ use Opis\Stream\{DataStream, Content, Stream, StreamWrapper};
 abstract class ContentStreamWrapper implements StreamWrapper
 {
     /** @var bool[] */
-    private static $registered = [];
+    private static array $registered = [];
 
     /** @var Content[] */
-    protected static $cached = [];
+    protected static array $cached = [];
 
     /** @var resource|null */
     public $context;
 
-    /** @var Stream */
-    protected $stream = null;
+    protected ?Stream $stream = null;
 
     /**
      * @inheritDoc
