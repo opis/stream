@@ -19,21 +19,15 @@ namespace Opis\Stream;
 
 class DataStream implements Stream
 {
-    protected ?string $content;
 
+    protected ?string $content = null;
     protected int $length = 0;
-
     protected int $pointer = 0;
-
-    protected ?array $stat;
-
+    protected ?array $stat = null;
     protected bool $readable = false;
-
     protected bool $writable = false;
-
     protected bool $seekable = true;
-
-    protected ?array $meta;
+    protected ?array $meta = null;
 
     /**
      * DataStream constructor.

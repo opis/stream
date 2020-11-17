@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2018 Zindex Software
+ * Copyright 2018-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 namespace Opis\Stream\Test;
 
 use Opis\Stream\DataStream;
+use Opis\Stream\PHPMemoryStream;
 use Opis\Stream\Stream;
 use Opis\Stream\PHPDataStream;
 use Opis\Stream\ResourceStream;
@@ -26,18 +27,16 @@ use PHPUnit\Framework\TestCase;
 class StreamTest extends TestCase
 {
     /**
-     * @dataProvider streamProvider
+     * @dataProvider readableStreamProvider
      */
     public function testReadable(callable $factory)
     {
         $data = 'this is data';
         /** @var Stream $stream */
-        $stream = $factory($data, 'r');
+        $stream = $factory($data);
 
         $this->assertTrue($stream->isReadable());
-        $this->assertTrue($stream->isSeekable());
 
-        $this->assertFalse($stream->isWritable());
         $this->assertFalse($stream->isClosed());
         $this->assertFalse($stream->isEOF());
 
@@ -58,7 +57,7 @@ class StreamTest extends TestCase
     }
 
     /**
-     * @dataProvider streamProvider
+     * @dataProvider readableStreamProvider
      */
     public function testReadLine(callable $factory)
     {
@@ -69,7 +68,7 @@ class StreamTest extends TestCase
         ];
 
         /** @var Stream $stream */
-        $stream = $factory(implode("\n", $lines), 'r');
+        $stream = $factory(implode("\n", $lines));
 
         $list = [];
         while (($l = $stream->readLine()) !== null) {
@@ -80,16 +79,15 @@ class StreamTest extends TestCase
     }
 
     /**
-     * @dataProvider streamProvider
+     * @dataProvider writableStreamProvider
      */
     public function testWritable(callable $factory)
     {
         /** @var Stream $stream */
-        $stream = $factory('', 'w');
+        $stream = $factory('w+');
 
-        $this->assertFalse($stream->isReadable());
+        $this->assertTrue($stream->isWritable());
         $this->assertTrue($stream->isSeekable());
-
         $this->assertFalse($stream->isClosed());
 
         $this->assertEquals(4, $stream->write('this'));
@@ -103,13 +101,13 @@ class StreamTest extends TestCase
     }
 
     /**
-     * @dataProvider streamProvider
+     * @dataProvider seekableStreamProvider
      */
     public function testSeek(callable $factory)
     {
         $data = 'this is data';
         /** @var Stream $stream */
-        $stream = $factory($data, 'r+');
+        $stream = $factory($data, 'r');
 
         $this->assertTrue($stream->isSeekable());
 
@@ -134,25 +132,46 @@ class StreamTest extends TestCase
         $this->assertEquals(strlen($data), $stream->size());
     }
 
-
-    public function streamProvider(): array
+    public function readableStreamProvider(): array
     {
         $list[] = [
-            function ($data, $mode = 'r') {
-                return new ResourceStream('data://text/plain,' . $data, $mode);
-            },
+            static fn ($data) => new PHPMemoryStream($data, 'rb+'),
         ];
 
         $list[] = [
-            function ($data, $mode = 'r') {
-                return new PHPDataStream($data, $mode);
-            },
+            static fn ($data) => new ResourceStream('data://text/plain,' . $data, 'r'),
         ];
 
         $list[] = [
-            function ($data, $mode = 'r') {
-                return new DataStream($data, $mode);
-            },
+            static fn ($data) => new PHPDataStream($data, 'r'),
+        ];
+
+        $list[] = [
+            static fn ($data) => new DataStream($data, 'r'),
+        ];
+
+        return $list;
+    }
+
+    public function seekableStreamProvider(): array
+    {
+        return $this->readableStreamProvider();
+    }
+
+    public function writableStreamProvider(): array
+    {
+        // PHPDataStream is readonly
+
+        $list[] = [
+            static fn () => new PHPMemoryStream('', 'w+'),
+        ];
+
+        $list[] = [
+            static fn () => new ResourceStream(tempnam(sys_get_temp_dir(), 'opis-stream-'), 'w+'),
+        ];
+
+        $list[] = [
+            static fn () => new DataStream('', 'w+'),
         ];
 
         return $list;

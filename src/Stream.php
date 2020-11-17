@@ -19,9 +19,9 @@ namespace Opis\Stream;
 
 interface Stream
 {
-    const SEEK_SET = SEEK_SET;
-    const SEEK_CUR = SEEK_CUR;
-    const SEEK_END = SEEK_END;
+    const SEEK_SET = \SEEK_SET;
+    const SEEK_CUR = \SEEK_CUR;
+    const SEEK_END = \SEEK_END;
 
     /**
      * Consumes data from stream

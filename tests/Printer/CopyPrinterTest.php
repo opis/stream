@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2018 Zindex Software
+ * Copyright 2018-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 namespace Opis\Stream\Test\Printer;
 
 use Opis\Stream\PHPDataStream;
+use Opis\Stream\PHPMemoryStream;
 use Opis\Stream\Printer\CopyPrinter;
 use PHPUnit\Framework\TestCase;
 
@@ -39,6 +40,6 @@ class CopyPrinterTest extends TestCase
      */
     protected function printer(string $data = ''): CopyPrinter
     {
-        return new CopyPrinter(new PHPDataStream($data, 'w+'));
+        return new CopyPrinter(new PHPMemoryStream($data, 'w+'));
     }
 }

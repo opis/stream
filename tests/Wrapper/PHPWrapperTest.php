@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2018 Zindex Software
+ * Copyright 2018-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 
 namespace Opis\Stream\Test\Wrapper;
 
-use Opis\Stream\PHPDataStream;
+use Opis\Stream\PHPMemoryStream;
 use Opis\Stream\Wrapper\PHPCodeStreamWrapper;
 use PHPUnit\Framework\TestCase;
 
@@ -57,7 +57,7 @@ class PHPWrapperTest extends TestCase
 
     public function testStreamTemplate()
     {
-        $stream = new PHPDataStream('', 'w+', 'text/html');
+        $stream = new PHPMemoryStream('', 'w+');
 
         $this->assertTrue(PHPCodeStreamWrapper::streamTemplate($stream, 'first line'));
 

@@ -21,6 +21,7 @@ final class PHPDataStream extends ResourceStream
 {
     /**
      * DataStream constructor.
+     * This is a readonly stream
      * @param string $data
      * @param string $mode
      * @param string $content_type

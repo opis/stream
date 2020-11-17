@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2018 Zindex Software
+ * Copyright 2018-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,14 +22,10 @@ class Content
 
     /** @var string|callable */
     protected $data;
-
-    protected ?int $created;
-
-    protected ?int $updated;
-
-    protected ?string $type;
-
-    protected bool $callable;
+    protected ?int $created = null;
+    protected ?int $updated = null;
+    protected ?string $type = null;
+    protected bool $callable = false;
 
     /**
      * Content constructor.
@@ -48,7 +44,8 @@ class Content
     }
 
     /**
-     * @inheritDoc
+     * @param array|null $options
+     * @return string|null
      */
     public function data(?array $options = null): ?string
     {
@@ -62,7 +59,7 @@ class Content
     }
 
     /**
-     * @inheritDoc
+     * @return int|null
      */
     public function created(): ?int
     {
@@ -70,7 +67,7 @@ class Content
     }
 
     /**
-     * @inheritDoc
+     * @return int|null
      */
     public function updated(): ?int
     {
@@ -78,7 +75,7 @@ class Content
     }
 
     /**
-     * @inheritDoc
+     * @return string|null
      */
     public function type(): ?string
     {

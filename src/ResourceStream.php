@@ -21,15 +21,15 @@ use InvalidArgumentException;
 
 class ResourceStream implements Stream
 {
+
     /** @var null|resource */
     protected $resource = null;
-
     protected ?string $str = null;
-
     protected bool $detached = false;
 
     /**
-     * @param resource|string $stream
+     * ResourceStream constructor.
+     * @param string|resource|Stream $stream
      * @param string $mode
      */
     public function __construct($stream, string $mode = 'rb')
@@ -378,9 +378,6 @@ class ResourceStream implements Stream
         return $this->str;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function __destruct()
     {
         if (!$this->detached) {

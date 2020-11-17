@@ -1,6 +1,6 @@
 <?php
 /* ============================================================================
- * Copyright 2018 Zindex Software
+ * Copyright 2018-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 
 namespace Opis\Stream\Test\Printer;
 
-use Opis\Stream\PHPDataStream;
+use Opis\Stream\PHPMemoryStream;
 use Opis\Stream\Printer\CSVPrinter;
 use PHPUnit\Framework\TestCase;
 
@@ -51,6 +51,6 @@ class CSVPrinterTest extends TestCase
      */
     protected function printer(string $data = ''): CSVPrinter
     {
-        return new CSVPrinter(new PHPDataStream($data, 'w+', 'text/csv'));
+        return new CSVPrinter(new PHPMemoryStream($data, 'w+'));
     }
 }

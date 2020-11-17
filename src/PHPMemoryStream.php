@@ -22,10 +22,10 @@ final class PHPMemoryStream extends ResourceStream
     /**
      * PHPMemoryStream constructor.
      * @param string|null $data
-     * @param int|null $max Maximum amount of bytes to store in memory before using a temporary file
      * @param string|null $mode
+     * @param int|null $max Maximum amount of bytes to store in memory before using a temporary file
      */
-    public function __construct(?string $data = null, ?int $max = null, ?string $mode = null)
+    public function __construct(?string $data = null, ?string $mode = null, ?int $max = null)
     {
         parent::__construct($max > 0 ? ('php://temp/maxmemory:' . $max) : 'php://memory', $mode ?? 'rb+');
 
