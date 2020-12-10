@@ -387,7 +387,7 @@ class DataStream implements Stream
     /**
      * @inheritDoc
      */
-    public function resource()
+    public function resource(bool $detach = false)
     {
         return null;
     }

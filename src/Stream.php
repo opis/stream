@@ -144,9 +144,11 @@ interface Stream
 
     /**
      * Gets the associated resource, if any
+     * @param bool $detach Marks resource as detached, so it won't be closed when this object is destructed.
+     *                      You have to close the resource the resource using fclose().
      * @return resource|null
      */
-    public function resource();
+    public function resource(bool $detach = false);
 
     /**
      * Gets all stream data and restores pointer position if possible

@@ -300,19 +300,11 @@ class ResourceStream implements Stream
     /**
      * @inheritDoc
      */
-    public function resource()
+    public function resource(bool $detach = false)
     {
-        return $this->resource;
-    }
-
-    /**
-     * Marks resource as detached, so it won't be closed when this class is destructed.
-     * You have to close the resource.
-     * @return resource|null
-     */
-    public function detach()
-    {
-        $this->detached = true;
+        if ($detach) {
+            $this->detached = true;
+        }
         return $this->resource;
     }
 
