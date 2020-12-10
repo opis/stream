@@ -91,4 +91,12 @@ interface StreamWrapper
      * @return resource|null
      */
     public function stream_cast(int $opt);
+
+    /**
+     * @param int $option
+     * @param int $arg1
+     * @param int|null $arg2
+     * @return bool
+     */
+    public function stream_set_option(int $option, int $arg1, ?int $arg2 = null): bool;
 }

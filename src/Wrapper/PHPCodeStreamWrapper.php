@@ -90,19 +90,11 @@ class PHPCodeStreamWrapper extends ContentStreamWrapper
             }
         }
 
-        $ret = (static function (string $_____CODE_____, ?array $_____VARS_____) {
-            if ($_____VARS_____) {
-                extract($_____VARS_____, EXTR_SKIP);
-            }
-            unset($_____VARS_____);
-
-            try {
-                /** @noinspection PhpIncludeInspection */
-                return include($_____CODE_____);
-            } catch (Throwable $e) {
-                return $e;
-            }
-        })(static::url($code), $vars);
+        if ($vars){
+            $ret = include_code_internal(static::url($code), $vars);
+        } else {
+            $ret = include_code_internal(static::url($code));
+        }
 
         if (!$alreadyRegistered) {
             static::unregister();
@@ -130,21 +122,21 @@ class PHPCodeStreamWrapper extends ContentStreamWrapper
     }
 
     /**
-     * @param Stream $stream
+     * @param Stream $outputStream
      * @param string $code
      * @param array|null $vars
      * @param int $chunk
      * @return bool
      */
-    public static function streamTemplate(Stream $stream, string $code, ?array $vars = null, int $chunk = 512): bool
+    public static function streamTemplate(Stream $outputStream, string $code, ?array $vars = null, int $chunk = 512): bool
     {
-        if ($stream->isClosed() || !$stream->isWritable()) {
+        if ($outputStream->isClosed() || !$outputStream->isWritable()) {
             return false;
         }
 
-        $ok = ob_start(function (string $data) use ($stream): bool {
+        $ok = ob_start(static function (string $data) use ($outputStream): bool {
             if ($data !== '') {
-                return $stream->write($data) !== null;
+                return $outputStream->write($data) !== null;
             }
             return true;
         }, $chunk);
@@ -160,5 +152,22 @@ class PHPCodeStreamWrapper extends ContentStreamWrapper
         unset($code, $vars);
 
         return ob_end_flush();
+    }
+}
+
+/**
+ * @internal
+ */
+function include_code_internal() {
+    if (func_num_args() > 1 && (${'#vars'} = func_get_arg(1))) {
+        extract(${'#vars'}, EXTR_SKIP);
+        unset(${'#vars'});
+    }
+
+    try {
+        /** @noinspection PhpIncludeInspection */
+        return include(func_get_arg(0));
+    } catch (Throwable $e) {
+        return $e;
     }
 }
